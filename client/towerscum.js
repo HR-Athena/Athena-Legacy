@@ -104,21 +104,23 @@ towerScum.prototype = {
   //Rounds object that contains functions to spawn monsters for each level respectively
    rounds : {
   1: function(context){
-  	  goldSwordy(context, 0, 0, 2)
-      swordy(context, 0, 0, 5)
+      
       blueVirus(context, 0, 0, 5)
     },
   2: function(context){
       blueVirus(context, 0, 0, 7)
+      redVirus(context, 0, 0, 3)
   },
   3: function(context){
       blueVirus(context, 0, 0, 10)
       redVirus(context, 0, 0, 1)
+      swordy(context, 0, 0, 5)
   },
   4: function(context){
       blueVirus(context, 0, 0, 15)
       redVirus(context, 0, 0, 3)
       yellowVirus(context, 0, 0, 1);
+      goldSwordy(context, 0, 0, 2)
     },
   5: function(context){
       blueVirus(context, 0, 0, 15)

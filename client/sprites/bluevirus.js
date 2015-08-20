@@ -53,7 +53,7 @@ var blueVirus = function(that, x, y, number, virusDead) {
           }, 2000);
           setTimeout(function(){
             virus.kill();
-            
+            dieSound.play();
             score += 20;
             scoreText.text = scoreString + score; //score displayed
             

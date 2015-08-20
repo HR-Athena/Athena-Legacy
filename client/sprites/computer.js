@@ -104,6 +104,8 @@ var weapon = function(that, x, y){
   fireWeapon.width = 100;
   fireWeapon.height = 50;
 
+
+
   weaponPanel = that.game.add.sprite(580+x, 335+y, 'missiles', 'doors/_02.png');
   weaponPanel.animations.add('weaponFire', doorsPNGs, 15, true);
   weaponPanel.width = ratio(90); //stretches image by width
@@ -142,6 +144,7 @@ var missileHit = function(virus, missile){
   missile.body.gravity.y=-200;
   explodeSound.play();
   virus.kill();
+  virus.parent.removeChild(virus);
   missile.play('explode');
   missile.body.velocity.x=0;
   setTimeout(function(){
@@ -163,7 +166,7 @@ var fireMissiles = function(){
         missiles.children[i].visible = true;
         missiles.children[i].body.gravity.y = 100;
         missiles.children[i].body.velocity.x = -200;
-    
+        
       }
   });
 
@@ -173,5 +176,5 @@ var fireMissiles = function(){
     mainComp.animations.play('computer');
     controlPanel.animations.play('blink');
   }, 1000);
-  
+
 };
