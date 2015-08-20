@@ -91,7 +91,7 @@ var swordy = function(that, x, y, number){ //x and y coordinates for positioning
   swordyViruses.physicsBodyType = Phaser.Physics.ARCADE;
   for(var i = 0; i < number; i++){//the amount of virus that will be spawned
   	setTimeout(function(){
-  		var swordy = swordyViruses.create(0+x, 430+y, 'viruses', "swordy/walk/01.png"); // the spawn coordinates for the virus
+  		var swordy = swordyViruses.create(0+x, 480+y, 'viruses', "swordy/walk/01.png"); // the spawn coordinates for the virus
   		addMovement(swordy);
   	}, (i*1000)+500) // the time between each spawn
   	
