@@ -1,3 +1,25 @@
+// ========== THIS IS THE SOCKET AREA ==========
+var socket = null;
+function connect() {
+    console.log('Connecting to local server...');
+    if (socket === null) {
+        socket = io.connect(null, {
+            'auto connect': false
+        });
+        socket.on('connect', function() {
+            console.log('Connected');
+        });
+
+        socket.on('message', function(data) {
+            console.log(data);
+        });
+    }
+    // socket.socket.connect();
+}
+connect();
+
+// ========== END OF THE SOCKET AREA ==========
+
 var towerScum = function(game){};
 
 //Global variables
