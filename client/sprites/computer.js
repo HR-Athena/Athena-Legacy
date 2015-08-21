@@ -170,6 +170,7 @@ var fireMissiles = function(){
       }
   });
 
+
   mainComp.animations.stop();
   controlPanel.animations.stop();
   setTimeout(function(){
