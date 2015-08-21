@@ -28,6 +28,10 @@ io.on("connection", function(socket){
     io.emit("returning the key", {id: socketId, data: data});
   });
 
+  socket.on("Start the game", function(){
+    console.log("I received a start message from the client");
+    io.emit("Start the game on the client");
+  });
 
   socket.on('message', function (msg) {
     var text = String(msg || '');
