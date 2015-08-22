@@ -37,15 +37,15 @@ io.on("connection", function(socket){
     // sockets.splice(sockets.indexOf(socket), 1);
     // updateRoster();
     for(var key in games){
-      if (key.player1 === socket){
-        key.player1 = undefined;
+      if (games.key.player1 === socket){
+        games.key.player1 = undefined;
       }
-      if (key.player2 === socket){
-        key.player2 = undefined;
+      if (games.key.player2 === socket){
+        games.key.player2 = undefined;
       }
-      for(var i = 0; i < key.viewers.length; i++){
-        if(key.viewers[i] === socket){
-          key.viewers.splice(i, 1);
+      for(var i = 0; i < games.key.viewers.length; i++){
+        if(games.key.viewers[i] === socket){
+          games.key.viewers.splice(i, 1);
         }
       }
     }
