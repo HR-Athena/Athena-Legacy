@@ -60,6 +60,8 @@ var socket;
 
 //Game object
 towerScum.prototype = {
+  // var to check if player
+  isPlayer: false,
   // var to check if spawning is happening
   spawning: false,
 
@@ -118,7 +120,7 @@ towerScum.prototype = {
         text: player2.text.text
       },
       'input': char
-    }
+    };
     socket.emit("keypress", JSON.stringify(data));
   },
 
@@ -153,16 +155,59 @@ towerScum.prototype = {
       }, this);
       this.destroyText(player1Text); // destroy original text
       this.createText('turn'); // make new text appear
-
     }
-
-    // else {
-    //   // console.log(blueViruses);
-    //   // console.log(blueVirus);
-    //   var newBlue = blueViruses.children[0];
-    //   blueViruses.children.push(newBlue);
-    // } 
   },
+
+  // verifyInput: function(char) {
+  //   if (this.isPlayer) {
+  //     if (char === player1Text.text[0]) {
+  //       player1Text.text = player1Text.text.slice(1);
+  //     } 
+  //     if (player1Text.text.length === 0) {
+  //       // fire function that turns the viruses
+  //       blueViruses.forEach(function(virus) {
+  //         virus.scale.x *= -1;
+  //         virus.body.velocity.x *= -1.2;
+  //       }, this);
+  //       this.makeVirus(this);
+  //       console.log(player1Text.y);
+  //       this.createText('turn'); // make new text appear
+  //     }
+  //   }
+  // },
+
+  // createText2: function(text, game) {
+  //   player2Text = this.game.add.text(1000, 0, text, {fill: 'white'});
+  //   // Defaults to ARCADE physics
+  //   this.game.physics.arcade.enable(player2Text);
+  //   player2Text.body.velocity.setTo(0, 60);
+  // },
+
+  // destroyText2: function(text) {
+  //   // Remove the text form view
+  //   var temp = text.text;
+  //   text.exists = false;
+  //   temp += ' turn';
+  //   this.createText2(temp);
+  // },
+
+  // verifyInput2: function(char) {
+  //   if (!this.isPlayer) {
+  //     if (char === player2Text.text[0]) {
+  //       player2Text.text = player2Text.text.slice(1);
+  //     } 
+  //     if (player2Text.text.length === 0) {
+  //       // fire function that turns the viruses
+  //       blueViruses.forEach(function(virus) {
+  //         virus.scale.x *= -1;
+  //         virus.body.velocity.x *= -1.2;
+  //       }, this);
+  //       this.makeVirus(this);
+  //       console.log(player2Text.y);
+  //       this.createText2('turn'); // make new text appear
+  //     }
+  //   }
+  // },
 
   //Attack function
   attack_player1: function(computer, virus){
@@ -198,6 +243,10 @@ towerScum.prototype = {
     }, 1000);
   },
 
+  makeVirus: function(context) {
+    blueVirus(context, 0, 0);
+  },
+  
   //Creates the game layout
   create: function() {
     console.log('Creating game...');
@@ -319,6 +368,14 @@ towerScum.prototype = {
     this.game.physics.arcade.collide(player1.text, ground, this.destroyText, null, null);
     this.game.physics.arcade.collide(player2.text, ground, this.destroyText, null, null);
 
+    if (player1Text.y > 600) {
+      this.destroyText(player1Text);
+    }
+
+    if (player2Text.y > 600) {
+      this.destroyText2(player2Text);
+    }
+
     this.bar.context.clearRect(0, 0, this.bar.width, this.bar.height);
      
      //color changes based on 50% health and 25% health
@@ -394,9 +451,9 @@ towerScum.prototype = {
     }
 
     // check if we need to create any more viruses
-    if (this.spawning === false) {
-      this.spawnVirus(this);
-    }
+    // if (this.spawning === false) {
+    //   this.spawnVirus(this);
+    // }
 
   },
 
