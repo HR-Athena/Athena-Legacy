@@ -40,6 +40,7 @@ io.on("connection", function(socket){
   });
 
   socket.on("credentials", function(credentials){
+    console.log("received the following credentials", credentials);
     var gameId = credentials.id;
     var name = credentials.name;
     if(!games[gameId]){
@@ -60,6 +61,7 @@ io.on("connection", function(socket){
       }
       games[gameId][viewers].push(socket);
     }
+    console.log("the games object now is:", games);
     sockets.splice(sockets.indexOf(socket), 1);
   });
 

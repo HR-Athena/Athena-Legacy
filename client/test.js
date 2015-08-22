@@ -43,6 +43,7 @@ $(document).keypress(function(e){
 });
 
 var printText = function(message){
+  console.log("receiving message", message);
   if(message.player === "player1"){
     $('.player1 span').append(message.data);
   } else if(message.player === "player2"){
