@@ -12,6 +12,8 @@
    <script type="text/javascript" src="towerscum.js"></script>
    <script type="text/javascript" src="states/gameover.js"></script>
    <script type="text/javascript" src="test.js"></script>
+   <script type="text/javascript" src="states/youwin.js"></script>
+   <script type="text/javascript" src="states/youlose.js"></script>
    <script>
      (function() {
 
@@ -24,6 +26,8 @@
         game.state.add("Menu",menu);
         game.state.add("TowerScum",towerScum);
         game.state.add("GameOver",gameOver);
+        game.state.add("Win",youWin);
+        game.state.add("Lose",youLose);
 
         //Boot the game with first state: Boot
         game.state.start("Boot");

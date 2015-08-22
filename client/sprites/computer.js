@@ -1,10 +1,5 @@
 console.log('loading computer sprite');
 
-// var ratio = function(number){
-//   var result = number + (number * 0.5 );
-//   return result;
-// };
-
 var doorsPNGs = [
 'doors/_01.png',
 'doors/_02.png',
@@ -69,11 +64,10 @@ var compSprite = function(that, x, y){ //x and y coordinates for positioning
 
   x = x || 0;
   y = y || 0;
-  // scale = scale || 1;
 
   wheels = that.game.add.sprite(1128+x, 468+y, 'maincomp', 'wheels_01.png');
-  wheels.animations.add('spin', ['wheels_01.png','wheels_02.png','wheels_03.png','wheels_04.png','wheels_05.png'], 15, true);
-  wheels.animations.play('spin');
+  // wheels.animations.add('spin', ['wheels_01.png','wheels_02.png','wheels_03.png','wheels_04.png','wheels_05.png'], 15, true);
+  // wheels.animations.play('spin');
   // console.log(wheels.width);
   // console.log(wheels.height);
   // wheels.width = ratio(74);
@@ -81,24 +75,24 @@ var compSprite = function(that, x, y){ //x and y coordinates for positioning
   wheels.anchor.setTo(0);
   // wheels.scale.x = scale; // specify direction
 
-  mainComp = that.game.add.sprite( 1068+x, 350+y, 'maincomp', 'computer_01.png');
-  mainComp.animations.add('computer', ['computer_01.png','computer_02.png','computer_03.png','computer_04.png','computer_05.png'], 15, true);
-  mainComp.animations.play('computer');
+  rightComp = that.game.add.sprite( 1068+x, 350+y, 'maincomp', 'computer_01.png');
+  // rightComp.animations.add('computer', ['computer_01.png','computer_02.png','computer_03.png','computer_04.png','computer_05.png'], 15, true);
+  // rightComp.animations.play('computer');
   //original size: 142 x 150 - +50% size: 
-  // mainComp.width = ratio(142);
-  // mainComp.height = ratio(150);
-  mainComp.anchor.setTo(0);
-  // mainComp.scale.x = scale; // specify direction
+  // rightComp.width = ratio(142);
+  // rightComp.height = ratio(150);
+  rightComp.anchor.setTo(0);
+  // rightComp.scale.x = scale; // specify direction
 
   controlPanel = that.game.add.sprite(1068+x, 437+y, 'maincomp', 'control_center_04.png');
-  controlPanel.animations.add('blink', ['control_center_01.png', 'control_center_02.png', 'control_center_03.png', 'control_center_04.png', 'control_center_05.png'], 15, true);
-  controlPanel.animations.play('blink');
+  // controlPanel.animations.add('blink', ['control_center_01.png', 'control_center_02.png', 'control_center_03.png', 'control_center_04.png', 'control_center_05.png'], 15, true);
+  // controlPanel.animations.play('blink');
   // controlPanel.width = ratio(72);
   // controlPanel.height = ratio(48);
   controlPanel.anchor.setTo(0);
   // controlPanel.scale.x = scale; // specify direction
-  that.game.physics.enable(mainComp, Phaser.Physics.ARCADE);
-  mainComp.body.immovable = true;
+  that.game.physics.enable(rightComp, Phaser.Physics.ARCADE);
+  rightComp.body.immovable = true;
 };
 
 var comp2Sprite = function(that, x, y){ //x and y coordinates for positioning
@@ -107,8 +101,8 @@ var comp2Sprite = function(that, x, y){ //x and y coordinates for positioning
   y = y || 0;
 
   wheels2 = that.game.add.sprite(1008+x, 470+y, 'maincomp', 'wheels_01.png');
-  wheels2.animations.add('spin', ['wheels_01.png','wheels_02.png','wheels_03.png','wheels_04.png','wheels_05.png'], 15, true);
-  wheels2.animations.play('spin');
+  // wheels2.animations.add('spin', ['wheels_01.png','wheels_02.png','wheels_03.png','wheels_04.png','wheels_05.png'], 15, true);
+  // wheels2.animations.play('spin');
   // console.log(wheels2.width);
   // console.log(wheels2.height);
   // wheels2.width = ratio(74);
@@ -116,25 +110,25 @@ var comp2Sprite = function(that, x, y){ //x and y coordinates for positioning
   wheels2.anchor.setTo(0);
   wheels2.scale.x = -1; // specify direction
 
-  mainComp2 = that.game.add.sprite(1068+x, 350+y, 'maincomp', 'computer_01.png');
-  mainComp2.animations.add('computer', ['computer_01.png','computer_02.png','computer_03.png','computer_04.png','computer_05.png'], 15, true);
-  mainComp2.animations.play('computer');
+  leftComp = that.game.add.sprite(1000+x, 350+y, 'maincomp', 'computer_01.png');
+  // leftComp.animations.add('computer', ['computer_01.png','computer_02.png','computer_03.png','computer_04.png','computer_05.png'], 15, true);
+  // leftComp.animations.play('computer');
   // original size: 142 x 150 - +50% size: 
-  // mainComp2.width = ratio(142);
-  // mainComp2.height = ratio(150);
-  mainComp2.anchor.setTo(0);
-  mainComp2.scale.x = -1; // specify direction
+  // leftComp.width = ratio(142);
+  // leftComp.height = ratio(150);
+  leftComp.anchor.setTo(0.5, 0);
+  leftComp.scale.x = -1; // specify direction
 
   controlPanel2 = that.game.add.sprite(1068+x, 437+y, 'maincomp', 'control_center_04.png');
-  controlPanel2.animations.add('blink', ['control_center_01.png', 'control_center_02.png', 'control_center_03.png', 'control_center_04.png', 'control_center_05.png'], 15, true);
-  controlPanel2.animations.play('blink');
+  // controlPanel2.animations.add('blink', ['control_center_01.png', 'control_center_02.png', 'control_center_03.png', 'control_center_04.png', 'control_center_05.png'], 15, true);
+  // controlPanel2.animations.play('blink');
   // controlPanel2.width = ratio(72);
   // controlPanel2.height = ratio(48);
   controlPanel2.anchor.setTo(0);
   controlPanel2.scale.x = -1; // specify direction
 
-  that.game.physics.enable(mainComp2, Phaser.Physics.ARCADE);
-  mainComp2.body.immovable = true;
+  that.game.physics.enable(leftComp, Phaser.Physics.ARCADE);
+  leftComp.body.immovable = true;
 
 };
 
@@ -189,7 +183,7 @@ var missileHit = function(virus, missile){
   missile.body.gravity.y=-200;
   explodeSound.play();
   virus.kill();
-  // virus.parent.removeChild(virus);
+  virus.parent.removeChild(virus);
   missile.play('explode');
   missile.body.velocity.x=0;
   setTimeout(function(){
@@ -222,17 +216,18 @@ var fireMissiles = function(){
         explosions.children[i].animations.play('launch', 10, false, true);
         console.log(missiles[i]);
         missiles.children[i].visible = true;
-        missiles.children[i].body.gravity.y = 100;
-        missiles.children[i].body.velocity.x = -200 + (-400 * Math.random());
+        missiles.children[i].body.gravity.y = 200;
+        missiles.children[i].body.velocity.x = -200 + (-25 * i);
+        missiles.children[i].body.velocity.y = -20 + (-25 * i);
         
       }
   });
 
 
-  mainComp.animations.stop();
+  rightComp.animations.stop();
   controlPanel.animations.stop();
   setTimeout(function(){
-    mainComp.animations.play('computer');
+    rightComp.animations.play('computer');
     controlPanel.animations.play('blink');
   }, 1);
 
