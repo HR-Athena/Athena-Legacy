@@ -31,8 +31,7 @@ var games = {};
 io.on("connection", function(socket){
   console.log("a user connected");
   sockets.push(socket); // add a new socket to the sockets list
-  console.log("sockets", JSON.stringify(sockets));
-  console.log("games", JSON.stringify(games));
+  console.log("games", games);
 
 
   // THIS IS BROKEN!!!
