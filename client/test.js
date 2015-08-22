@@ -1,6 +1,4 @@
 var player;
-var roomId = location.match(/id=(.*)&/)[1];
-var name = location.match(/player=@?(.*)/)[1];
 
 // ========== THIS IS THE SOCKET AREA ==========
 var socket = null;
@@ -12,6 +10,8 @@ function connect() {
         });
         socket.on('connect', function() {
           console.log('Connected');
+          var roomId = location.match(/id=(.*)&/)[1];
+          var name = location.match(/player=@?(.*)/)[1];
           socket.emit("credentials", {id: roomId, name: name});
         });
 
