@@ -51,9 +51,10 @@ var player2 = {
 
 var textStyle = {
   font: '24pt sans-serif',
-  fill: '#FF8E61',
+  // fill: '#FF8E61',
+  fill: '#FFF',
   wordWrap: true
-}
+};
 
 //Socket
 var socket;
@@ -75,13 +76,13 @@ towerScum.prototype = {
       delete player1.text;
     }
     //Create player 1 Text
-    player1.text = this.game.add.text(100, 75, text, textStyle);
+    player1.text = this.game.add.text(100, 10, text, textStyle);
  
     //Enable Physics on Text - Defaults to ARCADE physics
     this.game.physics.arcade.enable(player1.text);
     
     //Set velocity to fall at constant rate
-    player1.text.body.velocity.setTo(0, 10);
+    player1.text.body.velocity.setTo(0, 50);
     
   },
 
@@ -91,13 +92,13 @@ towerScum.prototype = {
       delete player2.text;
     }
     //Create player 2 text
-    player2.text = this.game.add.text(800, 75, text, textStyle);
+    player2.text = this.game.add.text(800, 10, text, textStyle);
 
     //Enabe physics
     this.game.physics.arcade.enable(player2.text);
 
     //Set velocity
-    player2.text.body.velocity.setTo(0, 10);
+    player2.text.body.velocity.setTo(0, 50);
   },
 
   destroyText: function(text) {
@@ -124,39 +125,39 @@ towerScum.prototype = {
     socket.emit("keypress", JSON.stringify(data));
   },
 
-  verifyInput: function(data) {
-    data = JSON.parse(data.data);
-    // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
-    if (data.player1.updateText !== '') {
-      console.log("player1: ", data.player1.updateText);
-      this.createPlayer1Text(data.player1.updateText);
-      player1.updateText = '';
-    } 
-    if (player1.text !== data.player1.text) {
-      console.log('updating p1 text: ', data.player1.text);
-      player1.text.text = data.player1.text;
-    } 
-    if (data.player2.updateText !== '') {
-      console.log("player2: ", data.player2.updateText);
-      this.createPlayer2Text(data.player2.updateText);
-      player2.updateText = '';
-    }
-    if (player2.text !== data.player2.text) {
-      console.log('updating p2 text: ', data.player2.text);
-      player2.text.text = data.player2.text;
-    } 
-    if (player1Text.text.length === 0) {
-      // fire function that turns the viruses
-      blueViruses.forEach(function(virus) {
-        // var oldScale = virus.scale.x;
-        virus.scale.x *= -1;
-        virus.body.velocity.x *= -1.5;
-        console.log('scale:',virus.scale.x,'velocity:',virus.body.velocity.x);
-      }, this);
-      this.destroyText(player1Text); // destroy original text
-      this.createText('turn'); // make new text appear
-    }
-  },
+  // verifyInput: function(data) {
+  //   data = JSON.parse(data.data);
+  //   // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
+  //   if (data.player1.updateText !== '') {
+  //     console.log("player1: ", data.player1.updateText);
+  //     this.createPlayer1Text(data.player1.updateText);
+  //     player1.updateText = '';
+  //   } 
+  //   if (player1.text !== data.player1.text) {
+  //     console.log('updating p1 text: ', data.player1.text);
+  //     player1.text.text = data.player1.text;
+  //   } 
+  //   if (data.player2.updateText !== '') {
+  //     console.log("player2: ", data.player2.updateText);
+  //     this.createPlayer2Text(data.player2.updateText);
+  //     player2.updateText = '';
+  //   }
+  //   if (player2.text !== data.player2.text) {
+  //     console.log('updating p2 text: ', data.player2.text);
+  //     player2.text.text = data.player2.text;
+  //   } 
+  //   if (player1.text.length === 0) {
+  //     // fire function that turns the viruses
+  //     blueViruses.forEach(function(virus) {
+  //       // var oldScale = virus.scale.x;
+  //       virus.scale.x *= -1;
+  //       virus.body.velocity.x *= -1.2;
+  //     }, this);
+  //     this.makeVirus(this);
+  //     // this.destroyText(player1Text); // destroy original text
+  //     // this.createText('turn'); // make new text appear
+  //   }
+  // },
 
   // verifyInput: function(char) {
   //   if (this.isPlayer) {
@@ -305,6 +306,38 @@ towerScum.prototype = {
    this.createStartText("Starting");
    //Create Listen for key events
    this.game.input.keyboard.addCallbacks(this, null, null, this.emitKeypress);
+
+   socket.on('returning the player data', function(data){
+      //Call function to verify input
+      // this.verifyInput(data);
+
+      data = JSON.parse(data.data);
+      // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
+      player1.text.text = data.player1.text;
+      player2.text.text = data.player2.text;
+
+      if (data.player1.updateText !== '') {
+        this.createPlayer1Text(data.player1.updateText);
+        player1.updateText = '';
+        blueViruses.forEach(function(virus) {
+          virus.scale.x *= -1;
+          virus.body.velocity.x *= -1.2;
+        }, this);
+        this.makeVirus(this);
+      } 
+
+      if (data.player2.updateText !== '') {
+        this.createPlayer2Text(data.player2.updateText);
+        player2.updateText = '';
+        blueViruses.forEach(function(virus) {
+          virus.scale.x *= -1;
+          virus.body.velocity.x *= -1.2;
+        }, this);
+        this.makeVirus(this);
+      }
+
+    //Early-Stage binding to properly refer to 'this'
+    }.bind(this));
   },
 
   //Things to perform on every frame change
@@ -312,27 +345,27 @@ towerScum.prototype = {
     //Call only when socket object is available
     // if (socket) {
       //Listen event for key press being emitted
-      socket.on('returning the player data', function(data){
-        //Call function to verify input
-        // this.verifyInput(data);
+      // socket.on('returning the player data', function(data){
+      //   //Call function to verify input
+      //   // this.verifyInput(data);
 
-        data = JSON.parse(data.data);
-        // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
-        player1.text.text = data.player1.text;
-        player2.text.text = data.player2.text;
+      //   data = JSON.parse(data.data);
+      //   // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
+      //   player1.text.text = data.player1.text;
+      //   player2.text.text = data.player2.text;
 
-        if (data.player1.updateText !== '') {
-          this.createPlayer1Text(data.player1.updateText);
-          player1.updateText = '';
-        } 
+      //   if (data.player1.updateText !== '') {
+      //     this.createPlayer1Text(data.player1.updateText);
+      //     player1.updateText = '';
+      //   } 
 
-        if (data.player2.updateText !== '') {
-          this.createPlayer2Text(data.player2.updateText);
-          player2.updateText = '';
-        }
+      //   if (data.player2.updateText !== '') {
+      //     this.createPlayer2Text(data.player2.updateText);
+      //     player2.updateText = '';
+      //   }
 
-      //Early-Stage binding to properly refer to 'this'
-      }.bind(this));
+      // //Early-Stage binding to properly refer to 'this'
+      // }.bind(this));
     // }
 
     //Checks for collision with ground and computer. Computer collision executes attack function
@@ -365,16 +398,18 @@ towerScum.prototype = {
 
     // this.game.physics.arcade.collide(ground, missiles, missileMiss, null, null);
 
-    this.game.physics.arcade.collide(player1.text, ground, this.destroyText, null, null);
-    this.game.physics.arcade.collide(player2.text, ground, this.destroyText, null, null);
+    // this.game.physics.arcade.collide(player1.text, ground, this.destroyText, null, null);
+    // this.game.physics.arcade.collide(player2.text, ground, this.destroyText, null, null);
+    this.game.physics.arcade.collide(player1.text, ground, null, null, null);
+    this.game.physics.arcade.collide(player2.text, ground, null, null, null);
 
-    if (player1Text.y > 600) {
-      this.destroyText(player1Text);
-    }
+    // if (player1Text.y > 600) {
+    //   this.destroyText(player1Text);
+    // }
 
-    if (player2Text.y > 600) {
-      this.destroyText2(player2Text);
-    }
+    // if (player2Text.y > 600) {
+    //   this.destroyText2(player2Text);
+    // }
 
     this.bar.context.clearRect(0, 0, this.bar.width, this.bar.height);
      
