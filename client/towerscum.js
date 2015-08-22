@@ -32,8 +32,25 @@ var roundNumber = 1;
 //PopUp Box
 var popup;
 
-//Text objects
-var player1Text, player2Text;
+//Player objects
+var player1 = {
+  level: 1,
+  counter: 0,
+  updateText: '',
+  text: {}
+};
+var player2 = {
+  level: 1,
+  counter: 0,
+  updateText: '',
+  text: {}
+};
+
+var textStyle = {
+  font: '24pt sans-serif',
+  fill: '#FF8E61',
+  wordWrap: true
+}
 
 //Socket
 var socket;
@@ -41,45 +58,88 @@ var socket;
 //Game object
 towerScum.prototype = {
 
-  createText: function(text, game) {
-    //Create player 1 Text
-    player1Text = this.game.add.text(100, 100, text, {fill: 'white'});
+  createStartText: function(text){
+    this.createPlayer1Text(text);
+    this.createPlayer2Text(text);
+  },
 
-    //Create player 2 text
-    player2Text = this.game.add.text(600, 100, text, {fill: 'white'});
-    
+  createPlayer1Text: function(text) {
+    if (player1.text) {
+      delete player1.text;
+    }
+    //Create player 1 Text
+    player1.text = this.game.add.text(100, 75, text, textStyle);
+ 
     //Enable Physics on Text - Defaults to ARCADE physics
-    this.game.physics.arcade.enable([player1Text, player2Text]);
+    this.game.physics.arcade.enable(player1.text);
     
     //Set velocity to fall at constant rate
-    player1Text.body.velocity.setTo(0, 10);
-    player2Text.body.velocity.setTo(0, 10);
+    player1.text.body.velocity.setTo(0, 10);
+    
   },
+
+  createPlayer2Text: function(text) {
+    
+    if (player2.text) {
+      delete player2.text;
+    }
+    //Create player 2 text
+    player2.text = this.game.add.text(800, 75, text, textStyle);
+
+    //Enabe physics
+    this.game.physics.arcade.enable(player2.text);
+
+    //Set velocity
+    player2.text.body.velocity.setTo(0, 10);
+  },
+
   destroyText: function(text) {
     // Remove the text form view
-    text.exists = false;
+    text.exists = false; 
   },
+
   emitKeypress: function(char) {
-    this.verifyInput(char);
-    socket.emit("keypress", char);
-  },
-  verifyInput: function(data) {
-    if (data.id === 1) {
-      //Check player 1 text
-      if (data.data === player1Text.text[0]) {
-        player1Text.text = player1Text.text.slice(1);
-      } else {
-        //Do Something
-      }
-    } else {
-      //Check player2 Text
-      if (data.data === player2Text.text[0]) {
-        player2Text.text = player2Text.text.slice(1);
-      } else {
-        //Do Something
-      }
+    data = {
+      'player1': {
+        level: player1.level,
+        counter: player1.counter,
+        updateText: player1.updateText,
+        text: player1.text.text
+      },
+      'player2': {
+        level: player2.level,
+        counter: player2.counter,
+        updateText: player2.updateText,
+        text: player2.text.text
+      },
+      'input': char
     }
+    socket.emit("keypress", JSON.stringify(data));
   },
+
+  verifyInput: function(data) {
+    data = JSON.parse(data.data);
+    // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
+    if (data.player1.updateText !== '') {
+      console.log("player1: ", data.player1.updateText);
+      this.createPlayer1Text(data.player1.updateText);
+      player1.updateText = '';
+    } 
+    if (player1.text !== data.player1.text) {
+      console.log('updating p1 text: ', data.player1.text);
+      player1.text.text = data.player1.text;
+    } 
+    if (data.player2.updateText !== '') {
+      console.log("player2: ", data.player2.updateText);
+      this.createPlayer2Text(data.player2.updateText);
+      player2.updateText = '';
+    }
+    if (player2.text !== data.player2.text) {
+      console.log('updating p2 text: ', data.player2.text);
+      player2.text.text = data.player2.text;
+    } 
+  },
+
   //Attack function
   attack: function(computer, virus){
     virus.animations.play('attack');
@@ -127,79 +187,78 @@ towerScum.prototype = {
 
    //Function to start next round
   nextRound: function(){
-  this.roundStarted = false; //resets roundStarted to false so endRound won't be executed right away
+    this.roundStarted = false; //resets roundStarted to false so endRound won't be executed right away
 
-  roundNumber++; //Round gets increased
-  this.rounds[roundNumber](this); //spawns monsters for next round
-  popup.alpha = 0; //hides the popup box
-  tween = this.game.add.tween(popup.scale).to( { x: 0.1, y: 0.1 }, 1000, Phaser.Easing.Elastic.Out, true);
+    roundNumber++; //Round gets increased
+    this.rounds[roundNumber](this); //spawns monsters for next round
+    popup.alpha = 0; //hides the popup box
+    tween = this.game.add.tween(popup.scale).to( { x: 0.1, y: 0.1 }, 1000, Phaser.Easing.Elastic.Out, true);
   },
 
   //Rounds object that contains functions to spawn monsters for each level respectively
    rounds : {
-  1: function(context){
-      blueVirus(context, 0, 0, 5);
-    },
-  2: function(context){
-      blueVirus(context, 0, 0, 7);
-      redVirus(context, 0, 0, 3);
-  },
-  3: function(context){
-      blueVirus(context, 0, 0, 10);
-      redVirus(context, 0, 0, 1);
-      swordy(context, 0, 0, 5);
-  },
-  4: function(context){
-      blueVirus(context, 0, 0, 15);
-      redVirus(context, 0, 0, 3);
-      yellowVirus(context, 0, 0, 1);
-      goldSwordy(context, 0, 0, 2);
-    },
-  5: function(context){
-      blueVirus(context, 0, 0, 15);
-      redVirus(context, 0, 0, 5);
-    },
-  6: function(context){
-      blueVirus(context, 0, 0, 20);
-      redVirus(context, 0, 0, 5);
-    },
-  7: function(context){
-      blueVirus(context, 0, 0, 25);
-      redVirus(context, 0, 0, 5);
-    },
-  8: function(context){
-      blueVirus(context, 0, 0, 25);
-      redVirus(context, 0, 0, 10);
-    },
-  9: function(context){
-      blueVirus(context, 0, 0, 30);
-      redVirus(context, 0, 0, 10);
-    },
-  10: function(context){
-      blueVirus(context, 0, 0, 35);
-      redVirus(context, 0, 0, 15);
-    },
-  11: function(context){
-      blueVirus(context, 0, 0, 40);
-      redVirus(context, 0, 0, 20);
-    },
-  12: function(context){
-      blueVirus(context, 0, 0, 45);
-      redVirus(context, 0, 0, 20);
-    },
-  13: function(context){
-      blueVirus(context, 0, 0, 50);
-      redVirus(context, 0, 0, 25);
+      1: function(context){
+          blueVirus(context, 0, 0, 5);
+        },
+      2: function(context){
+          blueVirus(context, 0, 0, 7);
+          redVirus(context, 0, 0, 3);
+      },
+      3: function(context){
+          blueVirus(context, 0, 0, 10);
+          redVirus(context, 0, 0, 1);
+          swordy(context, 0, 0, 5);
+      },
+      4: function(context){
+          blueVirus(context, 0, 0, 15);
+          redVirus(context, 0, 0, 3);
+          yellowVirus(context, 0, 0, 1);
+          goldSwordy(context, 0, 0, 2);
+        },
+      5: function(context){
+          blueVirus(context, 0, 0, 15);
+          redVirus(context, 0, 0, 5);
+        },
+      6: function(context){
+          blueVirus(context, 0, 0, 20);
+          redVirus(context, 0, 0, 5);
+        },
+      7: function(context){
+          blueVirus(context, 0, 0, 25);
+          redVirus(context, 0, 0, 5);
+        },
+      8: function(context){
+          blueVirus(context, 0, 0, 25);
+          redVirus(context, 0, 0, 10);
+        },
+      9: function(context){
+          blueVirus(context, 0, 0, 30);
+          redVirus(context, 0, 0, 10);
+        },
+      10: function(context){
+          blueVirus(context, 0, 0, 35);
+          redVirus(context, 0, 0, 15);
+        },
+      11: function(context){
+          blueVirus(context, 0, 0, 40);
+          redVirus(context, 0, 0, 20);
+        },
+      12: function(context){
+          blueVirus(context, 0, 0, 45);
+          redVirus(context, 0, 0, 20);
+        },
+      13: function(context){
+          blueVirus(context, 0, 0, 50);
+          redVirus(context, 0, 0, 25);
     },
   context: function(context){
     console.log(context);
   }
-
-
 },
   //Creates the game layout
   create: function() {
     console.log('Creating game...');
+    //Save socket variable for access later
     socket = socket;
     //create music
     music = this.game.add.audio('bg');
@@ -296,26 +355,39 @@ towerScum.prototype = {
     // invisible.renderable = false;
    //  This stops it from falling away when you jump on it
 
-   //Create Text
-   this.createText("Testing Text Here");
+   //Create Start Text
+   this.createStartText('Starting');
    //Create Listen for key events
    this.game.input.keyboard.addCallbacks(this, null, null, this.emitKeypress);
   },
 
-
-
-
   //Things to perform on every frame change
   update: function() {
     //Call only when socket object is available
-    if (socket) {
+    // if (socket) {
       //Listen event for key press being emitted
-      socket.on('returning the key', function(data){
+      socket.on('returning the player data', function(data){
         //Call function to verify input
-        this.verifyInput(data);
-        //Early-Stage binding to properly refer to 'this'
+        // this.verifyInput(data);
+
+        data = JSON.parse(data.data);
+        // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
+        player1.text.text = data.player1.text;
+        player2.text.text = data.player2.text;
+
+        if (data.player1.updateText !== '') {
+          this.createPlayer1Text(data.player1.updateText);
+          player1.updateText = '';
+        } 
+
+        if (data.player2.updateText !== '') {
+          this.createPlayer2Text(data.player2.updateText);
+          player2.updateText = '';
+        }
+
+      //Early-Stage binding to properly refer to 'this'
       }.bind(this));
-    }
+    // }
 
     //Checks for collision with ground and computer. Computer collision executes attack function
     this.game.physics.arcade.collide(blueViruses, ground, null, null, null);
@@ -345,8 +417,8 @@ towerScum.prototype = {
 
     this.game.physics.arcade.collide(ground, missiles, missileMiss, null, null);
 
-    this.game.physics.arcade.collide(player1Text, ground, this.destroyText, null, null);
-    this.game.physics.arcade.collide(player2Text, ground, this.destroyText, null, null);
+    this.game.physics.arcade.collide(player1.text, ground, this.destroyText, null, null);
+    this.game.physics.arcade.collide(player2.text, ground, this.destroyText, null, null);
 
     this.bar.context.clearRect(0, 0, this.bar.width, this.bar.height);
      
