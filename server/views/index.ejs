@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+   <script src="/socket.io/socket.io.js"></script>
+   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+   <script type="text/javascript" src="test.js"></script>
+   <script type="text/javascript" src="js/phaser.js"></script>
+   <script type="text/javascript" src="states/boot.js"></script>
+   <script type="text/javascript" src="states/preload.js"></script>
+   <script type="text/javascript" src="states/menu.js"></script>
+   <script type="text/javascript" src="towerscum.js"></script>
+   <script type="text/javascript" src="states/gameover.js"></script>
+   <script>
+     (function() {
+
+        //Create new game using Phaser
+        var game = new Phaser.Game(1200, 600, Phaser.AUTO, 'game');
+
+        //Add all game states
+        game.state.add("Boot",boot);
+        game.state.add("Preload",preload);
+        game.state.add("Menu",menu);
+        game.state.add("TowerScum",towerScum);
+        game.state.add("GameOver",gameOver);
+
+        //Boot the game with first state: Boot
+        game.state.start("Boot");
+      })();    
+    </script>
+    </head>
+    <body>
+      <input id="target" autofocus />
+      <div class="player1"><b>Player 1:</b><span></span></div>
+      <div class="player2"><b>Player 2:</b><span></span></div>
+    </body>
+</html>
