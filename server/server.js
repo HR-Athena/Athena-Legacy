@@ -38,6 +38,9 @@ io.on("connection", function(socket){
     // updateRoster();
     console.log("games during disconnect", games);
     for(var key in games){
+      console.log("key", key);
+      console.log("games", games);
+      console.log("games.key", games.key);
       if (games.key.player1 === socket){
         games.key.player1 = undefined;
       }
@@ -62,9 +65,11 @@ io.on("connection", function(socket){
     }
     if(name){
       if(!games[gameId].player1){
+        console.log("player 1 if statement");
         games[gameId].player1 = socket;
         socket.emit("assign player", "player1");
       } else if(!games[gameId].player2)
+        console.log("player 2 if statement");
         games[gameId].player2 = socket;
         socket.emit("assign player", "player2");
     } else {
