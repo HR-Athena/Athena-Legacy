@@ -118,9 +118,11 @@ app.get('/games/create', function(req, res){
   // console.log("whole req", req);
 
   var url  = 'https://hooks.slack.com/services/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';
+  var gameUrl = "https://towerscum-legacy.herokuapp.com/?id=" + req.query.user_id.toLowerCase();
+  var message = "You have been challenged to a game of TowerScum: <" + gameUrl + "| Click Here>";
   var payload = { "channel": "#random", 
                         "username": "webhookbot", 
-                        "text": "I got something" + JSON.stringify(req.query),
+                        "text": message,
                         "icon_emoji": ":ghost:"
               };
 
@@ -140,8 +142,7 @@ app.get('/games/create', function(req, res){
 
 app.get('/', function(req, res){
   // var id = req.query.id
-  console.log("Hey");
-  console.log (req.query);
+  console.log ("ID OF THE FUTURE GAME IS ", req.query.id);
   res.render('index.ejs');
 });
 
