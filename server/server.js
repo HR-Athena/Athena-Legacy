@@ -48,13 +48,13 @@ io.on("connection", function(socket){
       games[gameId] = {};
     }
     if(name){
-      if(!games[gameId][players]){
-        games[gameId][players] = [];
+      if(!games[gameId].players){
+        games[gameId].players = [];
         socket.emit("assign player", "player1");
-        games[gameId][players].push(socket);
+        games[gameId].players.push(socket);
       } else{
         socket.emit("assign player", "player2");
-        games[gameId][players].push(socket);
+        games[gameId].players.push(socket);
       }
     } else {
       if(!games[gameId].viewers){
