@@ -87,42 +87,53 @@ function broadcast(event, data) {
 }
 
 // ========== END OF SOCKET-RELATED MAGIC ==========
-app.post('/games/create', function(req, res){
 
-  console.log("!!!***===REQUEST!!!===***!!!:", req);
-  // console.log("whole req", req);
 
-  var url  = 'https://hooks.slack.com/services/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';
-  var payload = { "channel": "#random", 
-                        "username": "webhookbot", 
-                        "text": "I got something" + JSON.stringify(req.body),
-                        "icon_emoji": ":ghost:"
-              };
+// app.post('/games/create', function(req, res){
 
-  request({
-    url: url,
-    method: "POST",
-    json: true,
-    body: payload 
-}, function (error, response, body){
-});
+//   console.log("!!!***===REQUEST!!!===***!!!:", req);
+//   // console.log("whole req", req);
 
-  res.sendStatus(200);
-});
+//   var url  = 'https://hooks.slack.com/services/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';
+//   var payload = { "channel": "#random", 
+//                         "username": "webhookbot", 
+//                         "text": "I got something" + JSON.stringify(req.body),
+//                         "icon_emoji": ":ghost:"
+//               };
+
+//   request({
+//     url: url,
+//     method: "POST",
+//     json: true,
+//     body: payload 
+// }, function (error, response, body){
+// });
+
+//   res.sendStatus(200);
+// });
 
 
 app.get('/games/create', function(req, res){
 
   console.log("HERE IS A GET REQUEST FROM SLACK");
   console.log(req.query);
+  var player1 = req.query.user_name;
+  var player2 = req.query.text;
   // console.log("whole req", req);
 
   var url  = 'https://hooks.slack.com/services/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';
-  var gameUrl = "https://towerscum-legacy.herokuapp.com/?id=" + req.query.user_id.toLowerCase();
-  var message = "You have been challenged to a game of TowerScum: <" + gameUrl + "| Click Here>";
-  var payload = { "channel": "#random", 
+  var gameUrlForPlayer1 = "https://towerscum-legacy.herokuapp.com/?id=" + req.query.user_id.toLowerCase() + "&player=" + player1;
+  var gameUrlForPlayer2 = "https://towerscum-legacy.herokuapp.com/?id=" + req.query.user_id.toLowerCase() + "&player=" + player2;
+  var messageForPlayer1 = "You have been challenged to a game of TowerScum: <" + gameUrlForPlayer1 + "| Click Here>";
+  var messageForPlayer2 = "You have been challenged to a game of TowerScum: <" + gameUrlForPlayer2 + "| Click Here>";
+  var payloadForPlayer1 = { "channel": "@" + player1, 
                         "username": "webhookbot", 
-                        "text": message,
+                        "text": messageForPlayer1,
+                        "icon_emoji": ":ghost:"
+              };
+  var payloadForPlayer2 = { "channel": player2, // @sign is already in the message
+                        "username": "webhookbot", 
+                        "text": messageForPlayer2,
                         "icon_emoji": ":ghost:"
               };
 
@@ -130,9 +141,17 @@ app.get('/games/create', function(req, res){
     url: url,
     method: "POST",
     json: true,
-    body: payload 
-}, function (error, response, body){
-});
+    body: payloadForPlayer1
+  }, function (error, response, body){
+  });
+
+  request({
+    url: url,
+    method: "POST",
+    json: true,
+    body: payloadForPlayer2
+  }, function (error, response, body){
+  });
 
   res.sendStatus(200);
 });
