@@ -36,10 +36,6 @@ io.on("connection", function(socket){
         if (data.player1.text.length === 0) {
           //Add new text string
           if (data.player1.counter >= 5) {
-            //Reset player counter
-            data.player1.counter = 0;
-            //Increment level
-            data.player1.level++;
             var playerLevel = data.player1.level;
             var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
             if (!newText) {
@@ -69,10 +65,6 @@ io.on("connection", function(socket){
         if (data.player2.text.length === 0) {
           //Add new text string
           if (data.player2.counter >= 5) {
-            //Reset player counter
-            data.player2.counter = 0;
-            //Increment level
-            data.player2.level++;
             var playerLevel = data.player2.level;
             var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
             if (!newText) {
