@@ -33,11 +33,23 @@ io.on("connection", function(socket){
   sockets.push(socket); // add a new socket to the sockets list
   console.log("games", games);
 
-
-  // THIS IS BROKEN!!!
   socket.on('disconnect', function () {
-    sockets.splice(sockets.indexOf(socket), 1);
+    // sockets.splice(sockets.indexOf(socket), 1);
     // updateRoster();
+    for(var key in games){
+      if (key.player1 === socket){
+        key.player1 = undefined;
+      }
+      if (key.player2 === socket){
+        key.player2 = undefined;
+      }
+      for(var i = 0; i < key.viewers.length; i++){
+        if(key.viewers[i] === socket){
+          key.viewers.splice(i, 1);
+        }
+      }
+    }
+
   });
 
   socket.on("credentials", function(credentials){
@@ -48,14 +60,13 @@ io.on("connection", function(socket){
       games[gameId] = {};
     }
     if(name){
-      if(!games[gameId].players){
-        games[gameId].players = [];
+      if(!games[gameId].player1){
+        games[gameId].player1 = socket;
         socket.emit("assign player", "player1");
-        games[gameId].players.push(socket);
-      } else{
-        socket.emit("assign player", "player2");
-        games[gameId].players.push(socket);
       }
+      if(!games[gameId].player2)
+        games[gameId].player2 = socket;
+        socket.emit("assign player", "player2");
     } else {
       if(!games[gameId].viewers){
         games[gameId].viewers = [];
@@ -88,9 +99,17 @@ io.on("connection", function(socket){
     console.log("received a message:", message);
     var gameId = message.credentials.id;
     var player = message.credentials.player;
-    var sockets = games[gameId].players;
+    var player1Socket = games[gameId].player1;
+    var player2Socket = games[gameId].player2;
+    var sockets = [];
+    if(player1Socket){
+      sockets.push(player1Socket);
+    }
+    if(player2Socket){
+      sockets.push(player2Socket);
+    }
     if(games[gameId].visitors){
-      sockets.concat(games[gameId].visitors);
+      sockets = sockets.concat(games[gameId].visitors);
     }
     sockets.forEach(function(socket){
       socket.emit("returning the key", {player: player, data: message.data});
