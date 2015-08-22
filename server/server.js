@@ -12,17 +12,6 @@ var server = http.createServer(app);
 var io = socketio.listen(server);
 
 
-var fs = require('fs');
-var util = require('util');
-var log_file = fs.createWriteStream(__dirname + '/debug.log', {flags : 'w'});
-var log_stdout = process.stdout;
-
-console.log = function(d) { //
-  log_file.write(util.format(d) + '\n');
-  log_stdout.write(util.format(d) + '\n');
-};
-
-
 app.use(express.static(__dirname + "/../client"));
 app.use(bodyParser.json());
 // app.use(favicon(__dirname + '/../client/favicon.ico'));
@@ -100,13 +89,13 @@ function broadcast(event, data) {
 // ========== END OF SOCKET-RELATED MAGIC ==========
 app.post('/games/create', function(req, res){
 
-  console.log("body", req.body);
-  console.log("whole req", req);
+  console.log("!!!***===BODY===***!!!:", req.body);
+  // console.log("whole req", req);
 
   var url  = 'https://hooks.slack.com/services/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';
   var payload = { "channel": "#random", 
                         "username": "webhookbot", 
-                        "text": "I got something" + req.body,
+                        "text": "I got something" + JSON.stringify(req.body),
                         "icon_emoji": ":ghost:"
               };
 
