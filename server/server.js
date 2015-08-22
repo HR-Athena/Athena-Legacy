@@ -89,7 +89,7 @@ function broadcast(event, data) {
 // ========== END OF SOCKET-RELATED MAGIC ==========
 app.post('/games/create', function(req, res){
 
-  console.log("!!!***===BODY===***!!!:", req.body);
+  console.log("!!!***===REQUEST!!!===***!!!:", req);
   // console.log("whole req", req);
 
   var url  = 'https://hooks.slack.com/services/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';
@@ -105,18 +105,17 @@ app.post('/games/create', function(req, res){
     json: true,
     body: payload 
 }, function (error, response, body){
-    console.log(response);
 });
 
   res.sendStatus(200);
-})
+});
 
 app.get('/', function(req, res){
   // var id = req.query.id
   console.log("Hey");
   console.log (req.query);
   res.render('index.ejs');
-})
+});
 
 /* 
 url/?id='USER1_ID'
