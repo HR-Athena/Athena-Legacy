@@ -9,7 +9,8 @@ function connect() {
             'auto connect': false
         });
         socket.on('connect', function() {
-            console.log('Connected');
+          console.log('Connected');
+          socket.emit("credentials", {id: roomId, name: name});
         });
 
         socket.on('message', function(data) {
@@ -35,8 +36,6 @@ connect();
 var roomId = location.match(/id=(.*)&/)[1];
 var name = location.match(/player=@?(.*)/)[1];
 // var credentials = {roomId: roomId, name: name};
-
-socket.emit("credentials", {id: roomId, name: name});
 
 $(document).keypress(function(e){
   socket.emit("keypress", {credentials: {roomId: roomId, name: name, player: player}, data: String.fromCharCode(e.keyCode)});
