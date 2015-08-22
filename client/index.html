@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Document</title>
    <script src="/socket.io/socket.io.js"></script>
+   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+   <script type="text/javascript" src="test.js"></script>
    <script type="text/javascript" src="js/phaser.js"></script>
    <script type="text/javascript" src="states/boot.js"></script>
    <script type="text/javascript" src="states/preload.js"></script>
@@ -28,6 +30,9 @@
       })();    
     </script>
     </head>
-    <body> 	
+    <body>
+      <input id="target" autofocus />
+      <div class="player1"><b>Player 1:</b><span></span></div>
+      <div class="player2"><b>Player 2:</b><span></span></div>
     </body>
 </html>

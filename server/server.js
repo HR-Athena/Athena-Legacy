@@ -20,7 +20,17 @@ io.on("connection", function(socket){
 
   socket.on('disconnect', function () {
     sockets.splice(sockets.indexOf(socket), 1);
-    updateRoster();
+    // updateRoster();
+  });
+
+  socket.on("keypress", function(data){
+    var socketId = sockets.indexOf(socket);
+    io.emit("returning the key", {id: socketId, data: data});
+  });
+
+  socket.on("Start the game", function(){
+    console.log("I received a start message from the client");
+    io.emit("Start the game on the client");
   });
 
   socket.on('message', function (msg) {

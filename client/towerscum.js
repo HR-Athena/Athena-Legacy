@@ -1,24 +1,3 @@
-// ========== THIS IS THE SOCKET AREA ==========
-var socket = null;
-function connect() {
-    console.log('Connecting to local server...');
-    if (socket === null) {
-        socket = io.connect(null, {
-            'auto connect': false
-        });
-        socket.on('connect', function() {
-            console.log('Connected');
-        });
-
-        socket.on('message', function(data) {
-            console.log(data);
-        });
-    }
-    // socket.socket.connect();
-}
-connect();
-
-// ========== END OF THE SOCKET AREA ==========
 
 var towerScum = function(game){};
 
@@ -51,10 +30,39 @@ var roundNumber = 1;
 //PopUp Box
 var popup;
 
-
+//Text objects
+var player1Text, player2Text;
 
 //Game object
 towerScum.prototype = {
+
+  createText: function(text, game) {
+    player1Text = this.game.add.text(100, 100, text, {fill: 'white'});
+
+    // for (var i = 0; i < player1Text.text.length; i++) {
+    //   correct[player1Text.text[i]] = false;
+    // }
+
+    // Defaults to ARCADE physics
+    this.game.physics.arcade.enable(player1Text);
+    player1Text.body.velocity.setTo(0, 40);
+    console.log(player1Text);
+  },
+  destroyText: function(text) {
+    // Remove the text form view
+    text.exists = false;
+  },
+  verifyInput: function(char) {
+    console.log(char);
+    if (char === player1Text.text[0]) {
+      player1Text.text = player1Text.text.slice(1);
+    } else {
+      // console.log(blueViruses);
+      // console.log(blueVirus);
+      var newBlue = blueViruses.children[0];
+      blueViruses.children.push(newBlue);
+    } 
+  },
   //Attack function
   attack: function(virus){
     virus.animations.play('attack');
@@ -104,7 +112,6 @@ towerScum.prototype = {
   //Rounds object that contains functions to spawn monsters for each level respectively
    rounds : {
   1: function(context){
-      
       blueVirus(context, 0, 0, 5)
     },
   2: function(context){
@@ -250,6 +257,11 @@ towerScum.prototype = {
     invisible.body.immovable = true;
     invisible.renderable = false;
    //  This stops it from falling away when you jump on it
+
+   //Create Text
+   this.createText("Testing Text Here");
+   //Create Listen for key events
+   this.game.input.keyboard.addCallbacks(this, null, null, this.verifyInput);
   },
 
 
@@ -257,6 +269,8 @@ towerScum.prototype = {
 
   //Things to perform on every frame change
   update: function() {
+
+
 
     //Checks for collision with ground and computer. Computer collision executes attack function
     this.game.physics.arcade.collide(blueViruses, ground, null, null, null);
@@ -283,6 +297,8 @@ towerScum.prototype = {
     this.game.physics.arcade.collide(goldswordyViruses, collisionLine, this.attack, null, null);
     this.game.physics.arcade.collide(goldswordyViruses, missiles, missileHit, null, null);
     this.game.physics.arcade.collide(goldswordyViruses, platform);
+
+    this.game.physics.arcade.collide(player1Text, ground, this.destroyText, null, null);
 
     this.bar.context.clearRect(0, 0, this.bar.width, this.bar.height);
      
