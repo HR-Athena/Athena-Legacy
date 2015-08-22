@@ -63,7 +63,7 @@ io.on("connection", function(socket){
       games[gameId][viewers].push(socket);
     }
     console.log("the games object now is:", games);
-    sockets.splice(sockets.indexOf(socket), 1);
+    // sockets.splice(sockets.indexOf(socket), 1);
   });
 
 
