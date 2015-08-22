@@ -3,6 +3,7 @@ var async = require('async');
 var express = require('express');
 var socketio = require('socket.io');
 var favicon = require('serve-favicon');
+var textStore = require('./textStore.js');
 
 var app = express();
 var server = http.createServer(app);
@@ -23,9 +24,79 @@ io.on("connection", function(socket){
     // updateRoster();
   });
 
+  //Sync key presses between views
   socket.on("keypress", function(data){
+    data = JSON.parse(data);
     var socketId = sockets.indexOf(socket);
-    io.emit("returning the key", {id: socketId, data: data});
+    //Player 1 Checks if socketid is 1
+    if (socketId === 1) {
+      //Check player 1 text
+      if (data.input === data.player1.text[0]) {
+        data.player1.text = data.player1.text.slice(1);
+        if (data.player1.text.length === 0) {
+          //Add new text string
+          data.player1.counter += 1;
+          if (data.player1.counter === 5) {
+            //Reset player counter
+            data.player1.counter = 0;
+            //Increment level
+            var playerLevel = data.player1.level++;
+            var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
+            if (!newText) {
+              data.player1.updateText = textStore[playerLevel][0];
+            } else {
+              data.player1.updateText = newText;
+            }
+          } else {
+            var playerLevel = data.player1.level;
+            var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
+            if (!newText) {
+              data.player1.updateText = textStore[playerLevel][0];
+            } else {
+              data.player1.updateText = newText;
+            }
+          }
+          //Trigger another action
+        }
+      } else {
+        //Do Something
+      }
+    // Player 2 Checks
+    } else {
+      //Check player2 Text
+      if (data.input === data.player2.text[0]) {
+        data.player2.text = data.player2.text.slice(1);
+        if (data.player2.text.length === 0) {
+          //Add new text string
+          data.player2.counter += 1;
+          if (data.player2.counter === 5) {
+            //Reset player counter
+            data.player2.counter = 0;
+            //Increment level
+            var playerLevel = data.player2.level++;
+            var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
+            if (!newText) {
+              data.player2.updateText = textStore[playerLevel][0];
+            } else {
+              data.player2.updateText = newText;
+            }
+          } else {
+            var playerLevel = data.player2.level;
+            var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
+            if (!newText) {
+              data.player2.updateText = textStore[playerLevel][0];
+            } else {
+              data.player2.updateText = newText;
+            }
+          }
+          //Trigger another action
+        } else {
+        //Do Something
+        }
+      }
+    }
+    console.log(data);
+    io.emit("returning the player data", {id: socketId, data: JSON.stringify(data)});
   });
 
   socket.on("Start the game", function(){
