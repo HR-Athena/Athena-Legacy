@@ -381,35 +381,36 @@ towerScum.prototype = {
    this.createStartText('Starting');
    //Create Listen for key events
    this.game.input.keyboard.addCallbacks(this, null, null, this.emitKeypress);
+   socket.on('returning the player data', function(data){
+     //Call function to verify input
+     // this.verifyInput(data);
+
+     data = JSON.parse(data.data);
+     // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
+     player1.text.text = data.player1.text;
+     player2.text.text = data.player2.text;
+
+     if (data.player1.updateText !== '') {
+      player1.counter++;
+      this.createPlayer1Text(data.player1.updateText);
+      player1.updateText = '';
+     } 
+
+     if (data.player2.updateText !== '') {
+      player2.counter++;
+      this.createPlayer2Text(data.player2.updateText);
+      player2.updateText = '';
+     }
+
+     console.log("P1 Count: ", player1.counter);
+     console.log("P2 Count: ", player2.counter);
+
+   //Early-Stage binding to properly refer to 'this'
+   }.bind(this));
   },
 
   //Things to perform on every frame change
   update: function() {
-    //Call only when socket object is available
-    // if (socket) {
-      //Listen event for key press being emitted
-      socket.on('returning the player data', function(data){
-        //Call function to verify input
-        // this.verifyInput(data);
-
-        data = JSON.parse(data.data);
-        // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
-        player1.text.text = data.player1.text;
-        player2.text.text = data.player2.text;
-
-        if (data.player1.updateText !== '') {
-          this.createPlayer1Text(data.player1.updateText);
-          player1.updateText = '';
-        } 
-
-        if (data.player2.updateText !== '') {
-          this.createPlayer2Text(data.player2.updateText);
-          player2.updateText = '';
-        }
-
-      //Early-Stage binding to properly refer to 'this'
-      }.bind(this));
-    // }
 
     //Checks for collision with ground and computer. Computer collision executes attack function
     this.game.physics.arcade.collide(blueViruses, ground, null, null, null);

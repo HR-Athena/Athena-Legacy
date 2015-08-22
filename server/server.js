@@ -35,12 +35,12 @@ io.on("connection", function(socket){
         data.player1.text = data.player1.text.slice(1);
         if (data.player1.text.length === 0) {
           //Add new text string
-          data.player1.counter += 1;
-          if (data.player1.counter === 5) {
+          if (data.player1.counter >= 5) {
             //Reset player counter
             data.player1.counter = 0;
             //Increment level
-            var playerLevel = data.player1.level++;
+            data.player1.level++;
+            var playerLevel = data.player1.level;
             var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
             if (!newText) {
               data.player1.updateText = textStore[playerLevel][0];
@@ -68,12 +68,12 @@ io.on("connection", function(socket){
         data.player2.text = data.player2.text.slice(1);
         if (data.player2.text.length === 0) {
           //Add new text string
-          data.player2.counter += 1;
-          if (data.player2.counter === 5) {
+          if (data.player2.counter >= 5) {
             //Reset player counter
             data.player2.counter = 0;
             //Increment level
-            var playerLevel = data.player2.level++;
+            data.player2.level++;
+            var playerLevel = data.player2.level;
             var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
             if (!newText) {
               data.player2.updateText = textStore[playerLevel][0];
@@ -95,7 +95,6 @@ io.on("connection", function(socket){
         }
       }
     }
-    console.log(data);
     io.emit("returning the player data", {id: socketId, data: JSON.stringify(data)});
   });
 
