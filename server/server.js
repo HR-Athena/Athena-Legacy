@@ -88,10 +88,13 @@ function broadcast(event, data) {
 // ========== END OF SOCKET-RELATED MAGIC ==========
 app.post('/games/create', function(req, res){
 
+  console.log("body", req.body);
+  console.log("whole req", req);
+
   var url  = 'https://hooks.slack.com/services/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';
   var payload = { "channel": "#random", 
                         "username": "webhookbot", 
-                        "text": "I got "+ JSON.stringify(req),
+                        "text": "I got something" + req.body,
                         "icon_emoji": ":ghost:"
               };
 
@@ -112,7 +115,7 @@ app.get('/', function(req, res){
   // var id = req.query.id
   console.log("Hey");
   console.log (req.query);
-  res.render('index.ejs')
+  res.render('index.ejs');
 })
 
 /* 
