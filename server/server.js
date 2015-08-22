@@ -57,10 +57,10 @@ io.on("connection", function(socket){
         games[gameId][players].push(socket);
       }
     } else {
-      if(!games[gameId][viewers]){
-        games[gameId][viewers] = [];
+      if(!games[gameId].viewers){
+        games[gameId].viewers = [];
       }
-      games[gameId][viewers].push(socket);
+      games[gameId].viewers.push(socket);
     }
     console.log("the games object now is:", games);
     sockets.splice(sockets.indexOf(socket), 1);
