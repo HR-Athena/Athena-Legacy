@@ -1,4 +1,4 @@
-var blueVirus = function(that, x, y, number, virusDead) {
+var blueVirus = function(that, x, y) {
   x = x || 0;
   y = y || 0;
 
@@ -62,22 +62,22 @@ var blueVirus = function(that, x, y, number, virusDead) {
       //   virus.body.velocity.x = 50;
       //   virus.body.velocity.y = 0;
       // }
-        tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
+        // tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
     };
 
 
   	that.game.physics.arcade.enable(virus);
     virus.body.collideWorldBounds = true;
-    virus.inputEnabled = true;
-    virus.input.enableDrag(true);
-    virus.input.boundsSprite = gameCanvas;
+    // virus.inputEnabled = true;
+    // virus.input.enableDrag(true);
+    // virus.input.boundsSprite = gameCanvas;
 
     // virus.events.onDragStart.add(startDrag, this);
     // virus.events.onDragStop.add(stopDrag, this);
 
     virus.animations.add('walk', walkPNGs, 15, true);
     virus.animations.add('attack', attackPNGs, 15, true);
-    virus.animations.add('airwalk', walkPNGs, 45, true);
+    // virus.animations.add('airwalk', walkPNGs, 45, true);
     virus.animations.add('die', diePNGs, 15, true);
     virus.animations.play('walk');
 
@@ -85,20 +85,21 @@ var blueVirus = function(that, x, y, number, virusDead) {
     virus.body.gravity.y = 300;
     var scale = (Math.round(Math.random()) - 0.5) * 2;
     virus.body.velocity.x = 60 * scale;
-    
+
 
   };
 
-  blueViruses = that.game.add.group();
-  blueViruses.enableBody = true;
-  blueViruses.physicsBodyType = Phaser.Physics.ARCADE;
   
-  for (var i = 0; i < number; i++) {
-  	setTimeout(function() {
-  		var blueVirus = blueViruses.create(600+x, 400+y, 'viruses', "blue/walk/01.png");
-  		addMovement(blueVirus);
-  	}, i*1000);
-  }
+  
+  var newVirus = blueViruses.create(600+x, 400+y, 'viruses', "blue/walk/01.png");
+  addMovement(newVirus);
+
+  // for (var i = 0; i < number; i++) {
+  // 	setTimeout(function() {
+  // 		var blueVirus = blueViruses.create(600+x, 400+y, 'viruses', "blue/walk/01.png");
+  // 		addMovement(blueVirus);
+  // 	}, i*1000);
+  // }
   // console.log('blueViruses:',blueViruses);
   
   //var blueVirus = game.add.sprite(0+x, 480+y, 'viruses', "blue/walk/01.png");
