@@ -22,19 +22,74 @@ app.set('view engine', 'ejs');
 
 var messages = [];
 var sockets = [];
+var games = {};
+
+// var games = {gameId: {player1: socket, player2: socket, viewers: []}};
+// var games = {gameId: {players: [], viewers:[]}};
+
 
 io.on("connection", function(socket){
   console.log("a user connected");
   sockets.push(socket); // add a new socket to the sockets list
 
+
+  // THIS IS BROKEN!!!
   socket.on('disconnect', function () {
     sockets.splice(sockets.indexOf(socket), 1);
     // updateRoster();
   });
 
-  socket.on("keypress", function(data){
-    var socketId = sockets.indexOf(socket);
-    io.emit("returning the key", {id: socketId, data: data});
+  socket.on("credentials", function(credentials){
+    var gameId = credentials.id;
+    var name = credentials.name;
+    if(!games[gameId]){
+      games[gameId] = {};
+    }
+    if(name){
+      if(!games[gameId][players]){
+        games[gameId][players] = [];
+        socket.emit("assign player", "player1");
+        games[gameId][players].push(socket);
+      } else{
+        socket.emit("assign player", "player2");
+        games[gameId][players].push(socket);
+      }
+    } else {
+      if(!games[gameId][viewers]){
+        games[gameId][viewers] = [];
+      }
+      games[gameId][viewers].push(socket);
+    }
+    sockets.splice(sockets.indexOf(socket), 1);
+  });
+
+
+  // PREVIOUS STRUCTURE OF GAMEID OBJECT
+    // if(!games[gameId][player1] && name){
+    //   // socket.name = name
+    //   games[gameId][player1] = socket;
+    //   socket.emit("assign player", "player1");
+    //   games[gameId][viewers] = [];
+    // }else{
+    //   if(name){
+    //     games[gameId][player2] = socket;
+    //     socket.emit("assign player", "player2");
+    //   } else {
+    //     games[gameId][viewers].push(socket);
+    //   }
+    // }
+
+
+  socket.on("keypress", function(message){
+    var gameId = message.credentials.id;
+    var player = message.credentials.player;
+    var sockets = games[gameId].players;
+    if(games[gameId].visitors){
+      sockets.concat(games[gameId].visitors);
+    }
+    sockets.forEach(function(socket){
+      socket.emit("returning the key", {player: player, data: message.data});
+    });
   });
 
   socket.on("Start the game", function(){

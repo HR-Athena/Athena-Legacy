@@ -1,3 +1,5 @@
+var player;
+
 // ========== THIS IS THE SOCKET AREA ==========
 var socket = null;
 function connect() {
@@ -19,6 +21,10 @@ function connect() {
           printText(data);
         });
 
+      socket.on('assign player', function(data) {
+        player = data;
+      });
+
     }
     // socket.socket.connect();
 }
@@ -26,14 +32,36 @@ connect();
 
 // ========== END OF THE SOCKET AREA ==========
 
+var roomId = location.match(/id=(.*)&/)[1];
+var name = location.match(/player=@?(.*)/)[1];
+// var credentials = {roomId: roomId, name: name};
+
+socket.emit("credentials", {id: roomId, name: name});
+
 $(document).keypress(function(e){
-  socket.emit("keypress", String.fromCharCode(e.keyCode));
+  socket.emit("keypress", {credentials: {roomId: roomId, name: name, player: player}, data: String.fromCharCode(e.keyCode)});
 });
 
-var printText = function(data){
-  if(data.id === 1){
-    $('.player1 span').append(data.data);
-  } else {
-    $('.player2 span').append(data.data);
+var printText = function(message){
+  if(message.player === "player1"){
+    $('.player1 span').append(message.data);
+  } else if(message.player === "player2"){
+    $('.player2 span').append(message.data);
   }
 };
+
+
+// var printText = function(data){
+//   if(data.roomId === roomId){
+//     if(data.name === name){
+//       $('.player1 span').append(data.data);
+//     } else if (data.name !== "visitor"){
+//       $('.player2 span').append(data.data);
+//     } else {
+      
+//     }
+//   }
+// };
+
+
+
