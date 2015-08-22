@@ -52,7 +52,7 @@ preload.prototype = {
   },
     create: function(){
     console.log('Preloading data...');
-    // this.game.state.start("Menu");
-    this.game.state.start("TowerScum");
+    this.game.state.start("Menu");
+    // this.game.state.start("TowerScum");
   }
 };
