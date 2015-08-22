@@ -91,7 +91,7 @@ app.post('/games/create', function(req, res){
   var url  = 'https://hooks.slack.com/services/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';
   var payload = { "channel": "#random", 
                         "username": "webhookbot", 
-                        "text": "I got "+ JSON.stringify(req.payload),
+                        "text": "I got "+ JSON.stringify(req),
                         "icon_emoji": ":ghost:"
               };
 
