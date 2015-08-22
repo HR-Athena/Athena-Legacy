@@ -35,35 +35,50 @@ var popup;
 //Text objects
 var player1Text, player2Text;
 
+//Socket
+var socket;
+
 //Game object
 towerScum.prototype = {
 
   createText: function(text, game) {
+    //Create player 1 Text
     player1Text = this.game.add.text(100, 100, text, {fill: 'white'});
 
-    // for (var i = 0; i < player1Text.text.length; i++) {
-    //   correct[player1Text.text[i]] = false;
-    // }
-
-    // Defaults to ARCADE physics
-    this.game.physics.arcade.enable(player1Text);
-    player1Text.body.velocity.setTo(0, 40);
-    console.log(player1Text);
+    //Create player 2 text
+    player2Text = this.game.add.text(600, 100, text, {fill: 'white'});
+    
+    //Enable Physics on Text - Defaults to ARCADE physics
+    this.game.physics.arcade.enable([player1Text, player2Text]);
+    
+    //Set velocity to fall at constant rate
+    player1Text.body.velocity.setTo(0, 10);
+    player2Text.body.velocity.setTo(0, 10);
   },
   destroyText: function(text) {
     // Remove the text form view
     text.exists = false;
   },
-  verifyInput: function(char) {
-    console.log(char);
-    if (char === player1Text.text[0]) {
-      player1Text.text = player1Text.text.slice(1);
+  emitKeypress: function(char) {
+    this.verifyInput(char);
+    socket.emit("keypress", char);
+  },
+  verifyInput: function(data) {
+    if (data.id === 1) {
+      //Check player 1 text
+      if (data.data === player1Text.text[0]) {
+        player1Text.text = player1Text.text.slice(1);
+      } else {
+        //Do Something
+      }
     } else {
-      // console.log(blueViruses);
-      // console.log(blueVirus);
-      var newBlue = blueViruses.children[0];
-      blueViruses.children.push(newBlue);
-    } 
+      //Check player2 Text
+      if (data.data === player2Text.text[0]) {
+        player2Text.text = player2Text.text.slice(1);
+      } else {
+        //Do Something
+      }
+    }
   },
   //Attack function
   attack: function(computer, virus){
@@ -185,7 +200,7 @@ towerScum.prototype = {
   //Creates the game layout
   create: function() {
     console.log('Creating game...');
-
+    socket = socket;
     //create music
     music = this.game.add.audio('bg');
     music.loop = true;
@@ -284,7 +299,7 @@ towerScum.prototype = {
    //Create Text
    this.createText("Testing Text Here");
    //Create Listen for key events
-   this.game.input.keyboard.addCallbacks(this, null, null, this.verifyInput);
+   this.game.input.keyboard.addCallbacks(this, null, null, this.emitKeypress);
   },
 
 
@@ -292,8 +307,15 @@ towerScum.prototype = {
 
   //Things to perform on every frame change
   update: function() {
-
-
+    //Call only when socket object is available
+    if (socket) {
+      //Listen event for key press being emitted
+      socket.on('returning the key', function(data){
+        //Call function to verify input
+        this.verifyInput(data);
+        //Early-Stage binding to properly refer to 'this'
+      }.bind(this));
+    }
 
     //Checks for collision with ground and computer. Computer collision executes attack function
     this.game.physics.arcade.collide(blueViruses, ground, null, null, null);
@@ -324,6 +346,7 @@ towerScum.prototype = {
     this.game.physics.arcade.collide(ground, missiles, missileMiss, null, null);
 
     this.game.physics.arcade.collide(player1Text, ground, this.destroyText, null, null);
+    this.game.physics.arcade.collide(player2Text, ground, this.destroyText, null, null);
 
     this.bar.context.clearRect(0, 0, this.bar.width, this.bar.height);
      
