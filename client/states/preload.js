@@ -1,7 +1,8 @@
 var preload = function(game){};
 
 preload.prototype = {
-  preload: function(){ 
+  preload: function(){
+    this.game.stage.disableVisibilityChange = true;
 
     //loading bar
     var loadingBar = this.add.sprite(600,300,"loading");
