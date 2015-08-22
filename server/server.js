@@ -4,12 +4,16 @@ var express = require('express');
 var socketio = require('socket.io');
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
+var logger  = require('caterpillar').createLogger({level:7});
 var request = require ('request');
 var path = require('path');
 
 var app = express();
 var server = http.createServer(app);
 var io = socketio.listen(server);
+
+logger.pipe(require('fs').createWriteStream('./debug.log'));
+
 
 app.use(express.static(__dirname + "/../client"));
 app.use(bodyParser.json());
@@ -89,6 +93,7 @@ function broadcast(event, data) {
 app.post('/games/create', function(req, res){
 
   console.log("body", req.body);
+  logger.log(req);
   console.log("whole req", req);
 
   var url  = 'https://hooks.slack.com/services/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';
@@ -108,7 +113,6 @@ app.post('/games/create', function(req, res){
 });
 
   res.sendStatus(200);
-  console.log(req.body);
 })
 
 app.get('/', function(req, res){
