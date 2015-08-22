@@ -63,8 +63,7 @@ io.on("connection", function(socket){
       if(!games[gameId].player1){
         games[gameId].player1 = socket;
         socket.emit("assign player", "player1");
-      }
-      if(!games[gameId].player2)
+      } else if(!games[gameId].player2)
         games[gameId].player2 = socket;
         socket.emit("assign player", "player2");
     } else {
