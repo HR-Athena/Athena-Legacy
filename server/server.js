@@ -36,6 +36,7 @@ io.on("connection", function(socket){
   socket.on('disconnect', function () {
     // sockets.splice(sockets.indexOf(socket), 1);
     // updateRoster();
+    console.log("games during disconnect", games);
     for(var key in games){
       if (games.key.player1 === socket){
         games.key.player1 = undefined;

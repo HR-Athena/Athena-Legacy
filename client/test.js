@@ -25,6 +25,7 @@ function connect() {
         });
 
       socket.on('assign player', function(data) {
+        console.log('assigning player:', data);
         player = data;
       });
 
