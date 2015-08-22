@@ -31,6 +31,8 @@ var games = {};
 io.on("connection", function(socket){
   console.log("a user connected");
   sockets.push(socket); // add a new socket to the sockets list
+  console.log("sockets", JSON.stringify(sockets));
+  console.log("games", JSON.stringify(games));
 
 
   // THIS IS BROKEN!!!
@@ -83,6 +85,7 @@ io.on("connection", function(socket){
 
 
   socket.on("keypress", function(message){
+    console.log("detected a keypress");
     var gameId = message.credentials.id;
     var player = message.credentials.player;
     var sockets = games[gameId].players;
@@ -172,8 +175,8 @@ function broadcast(event, data) {
 
 app.get('/games/create', function(req, res){
 
-  console.log("HERE IS A GET REQUEST FROM SLACK");
-  console.log(req.query);
+  // console.log("HERE IS A GET REQUEST FROM SLACK");
+  // console.log(req.query);
   var player1 = req.query.user_name;
   var player2 = req.query.text;
   // console.log("whole req", req);
@@ -218,14 +221,9 @@ app.get('/games/create', function(req, res){
 
 app.get('/', function(req, res){
   // var id = req.query.id
-  console.log ("ID OF THE FUTURE GAME IS ", req.query.id);
+  // console.log ("ID OF THE FUTURE GAME IS ", req.query.id);
   res.render('index.ejs');
 });
-
-/* 
-url/?id='USER1_ID'
-
-*/
 
 
 server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
