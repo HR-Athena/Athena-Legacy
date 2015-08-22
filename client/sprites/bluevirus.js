@@ -39,12 +39,12 @@ var blueVirus = function(that, x, y, number, virusDead) {
     virus.body.moves = false;
     virus.input.boundsSprite = bg;
      //tween.pause();
-  }
+  };
 
   var stopDrag = function(virus){
         virus.body.moves = true;
         virus.animations.play('walk');
-        virus.body.velocity.x = 100
+        virus.body.velocity.x = -100;
   
         if (virus.y < 200){ // top of map = -10 or something bottom is like 590?
           virus.animations.stop('walk');
@@ -63,7 +63,7 @@ var blueVirus = function(that, x, y, number, virusDead) {
           virus.body.velocity.y = 0;
         }
         //tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
-    }
+    };
 
 
 	that.game.physics.arcade.enable(virus);
@@ -82,10 +82,10 @@ var blueVirus = function(that, x, y, number, virusDead) {
     virus.animations.play('walk');
 
     //var tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
-    virus.body.gravity.y = 300
-    virus.body.velocity.x = 100
+    virus.body.gravity.y = 50 * (Math.random()-0.5);
+    virus.body.velocity.x = 100;
 
-  }
+  };
 
   blueViruses = that.game.add.group();
   blueViruses.enableBody = true;
@@ -94,7 +94,7 @@ var blueVirus = function(that, x, y, number, virusDead) {
   	setTimeout(function(){
   		var blueVirus = blueViruses.create(0+x, 480+y, 'viruses', "blue/walk/01.png");
   		addMovement(blueVirus);
-  	}, i*1000)
+  	}, i*1000);
   }
   
   //var blueVirus = game.add.sprite(0+x, 480+y, 'viruses', "blue/walk/01.png");

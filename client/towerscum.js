@@ -3,7 +3,7 @@ var towerScum = function(game){};
 
 //Global variables
 
-//HP
+//HP for player 1
 var health = 128;
 
 //Score
@@ -66,7 +66,7 @@ towerScum.prototype = {
   //Attack function
   attack: function(virus){
     virus.animations.play('attack');
-    health -= .25;
+    health -= 0.25;
     virus.y = virus.y - 25;
     var context = this;
     sparkSound.play();
@@ -92,7 +92,7 @@ towerScum.prototype = {
     }
     //If there are no more monsters left, make the popup appear
     if(!totalLeft ){
-      console.log('round ended')
+      console.log('round ended');
       tween = this.game.add.tween(popup.scale).to( { x: 1, y: 1 }, 1000, Phaser.Easing.Elastic.Out, true);
       popup.alpha = 1;
 
@@ -106,64 +106,64 @@ towerScum.prototype = {
   roundNumber++; //Round gets increased
   this.rounds[roundNumber](this); //spawns monsters for next round
   popup.alpha = 0; //hides the popup box
-  tween = this.game.add.tween(popup.scale).to( { x: .1, y: .1 }, 1000, Phaser.Easing.Elastic.Out, true);
+  tween = this.game.add.tween(popup.scale).to( { x: 0.1, y: 0.1 }, 1000, Phaser.Easing.Elastic.Out, true);
   },
 
   //Rounds object that contains functions to spawn monsters for each level respectively
    rounds : {
   1: function(context){
-      blueVirus(context, 0, 0, 5)
+      blueVirus(context, 0, 0, 1);
     },
   2: function(context){
-      blueVirus(context, 0, 0, 7)
-      redVirus(context, 0, 0, 3)
+      blueVirus(context, 0, 0, 7);
+      redVirus(context, 0, 0, 3);
   },
   3: function(context){
-      blueVirus(context, 0, 0, 10)
-      redVirus(context, 0, 0, 1)
-      swordy(context, 0, 0, 5)
+      blueVirus(context, 0, 0, 10);
+      redVirus(context, 0, 0, 1);
+      swordy(context, 0, 0, 5);
   },
   4: function(context){
-      blueVirus(context, 0, 0, 15)
-      redVirus(context, 0, 0, 3)
+      blueVirus(context, 0, 0, 15);
+      redVirus(context, 0, 0, 3);
       yellowVirus(context, 0, 0, 1);
-      goldSwordy(context, 0, 0, 2)
+      goldSwordy(context, 0, 0, 2);
     },
   5: function(context){
-      blueVirus(context, 0, 0, 15)
-      redVirus(context, 0, 0, 5)
+      blueVirus(context, 0, 0, 15);
+      redVirus(context, 0, 0, 5);
     },
   6: function(context){
-      blueVirus(context, 0, 0, 20)
-      redVirus(context, 0, 0, 5)
+      blueVirus(context, 0, 0, 20);
+      redVirus(context, 0, 0, 5);
     },
   7: function(context){
-      blueVirus(context, 0, 0, 25)
-      redVirus(context, 0, 0, 5)
+      blueVirus(context, 0, 0, 25);
+      redVirus(context, 0, 0, 5);
     },
   8: function(context){
-      blueVirus(context, 0, 0, 25)
-      redVirus(context, 0, 0, 10)
+      blueVirus(context, 0, 0, 25);
+      redVirus(context, 0, 0, 10);
     },
   9: function(context){
-      blueVirus(context, 0, 0, 30)
-      redVirus(context, 0, 0, 10)
+      blueVirus(context, 0, 0, 30);
+      redVirus(context, 0, 0, 10);
     },
   10: function(context){
-      blueVirus(context, 0, 0, 35)
-      redVirus(context, 0, 0, 15)
+      blueVirus(context, 0, 0, 35);
+      redVirus(context, 0, 0, 15);
     },
   11: function(context){
-      blueVirus(context, 0, 0, 40)
-      redVirus(context, 0, 0, 20)
+      blueVirus(context, 0, 0, 40);
+      redVirus(context, 0, 0, 20);
     },
   12: function(context){
-      blueVirus(context, 0, 0, 45)
-      redVirus(context, 0, 0, 20)
+      blueVirus(context, 0, 0, 45);
+      redVirus(context, 0, 0, 20);
     },
   13: function(context){
-      blueVirus(context, 0, 0, 50)
-      redVirus(context, 0, 0, 25)
+      blueVirus(context, 0, 0, 50);
+      redVirus(context, 0, 0, 25);
     },
   context: function(context){
     console.log(context);
@@ -237,7 +237,7 @@ towerScum.prototype = {
 
     //Text for Round Cleared popup box
     roundString = 'ROUND CLEARED!';
-    roundText = this.game.make.text(pw+60, -ph+50, roundString,  { font: '16px Calibri', fill: '#fff' })
+    roundText = this.game.make.text(pw+60, -ph+50, roundString,  { font: '16px Calibri', fill: '#fff' });
 
     //Add Round Text and Okay Button to popup box
     popup.addChild(roundText);

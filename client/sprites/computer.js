@@ -122,10 +122,11 @@ var weapon = function(that, x, y){
   missiles.enableBody = true;
   missiles.physicsBodyType = Phaser.Physics.ARCADE;
 
-    explosions = that.game.add.group();
+  explosions = that.game.add.group();
   explosions.enableBody = true;
   explosions.physicsBodyType = Phaser.Physics.ARCADE;
-  for(var i = 0; i < 6; i++){
+
+  for(var i = 0; i < 100; i++){
     missile = missiles.create(620+ Math.random() * 50, 330+ Math.random() * 50, 'missiles', 'missile/_07.png');
     missile.animations.add('explode', explode, 18, false);
     that.game.physics.arcade.enable(missile);
@@ -149,7 +150,7 @@ var missileHit = function(virus, missile){
   missile.body.velocity.x=0;
   setTimeout(function(){
     missile.kill();
-  }, 1000);
+  }, 10);
   
 };
 
@@ -160,12 +161,12 @@ var fireMissiles = function(){
   weaponPanel.events.onAnimationComplete.add(function(){ //trigger another animation
     plate.visible = true;
     plate.animations.play('plate', 10, false, true);
-    for(var i = 0; i < 6; i++){
+    for(var i = 0; i < 100; i++){
         explosions.children[i].animations.play('launch', 10, false, true);
         console.log(missiles[i]);
         missiles.children[i].visible = true;
-        missiles.children[i].body.gravity.y = 100;
-        missiles.children[i].body.velocity.x = -200;
+        missiles.children[i].body.gravity.y = 75 * Math.random();
+        missiles.children[i].body.velocity.x = -200 * Math.random();
         
       }
   });
@@ -176,6 +177,6 @@ var fireMissiles = function(){
   setTimeout(function(){
     mainComp.animations.play('computer');
     controlPanel.animations.play('blink');
-  }, 1000);
+  }, 1);
 
 };
