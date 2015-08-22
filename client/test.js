@@ -15,7 +15,7 @@ function connect() {
         });
 
         socket.on('returning the key', function(data) {
-          console.log("from server:", data);
+          // console.log("from server:", data);
           printText(data);
         });
 

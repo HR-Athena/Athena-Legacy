@@ -37,8 +37,8 @@ var blueVirus = function(that, x, y, number, virusDead) {
     var startDrag = function(virus){
       virus.animations.play('airwalk');
       virus.body.moves = false;
-      virus.input.boundsSprite = bg;
-       //tween.pause();
+      virus.input.boundsSprite = gameCanvas;
+      tween.pause();
     };
 
     var stopDrag = function(virus){
@@ -46,23 +46,23 @@ var blueVirus = function(that, x, y, number, virusDead) {
       virus.animations.play('walk');
       virus.body.velocity.x = -100;
 
-      if (virus.y < 200){ // top of map = -10 or something bottom is like 590?
-        virus.animations.stop('walk');
-        setTimeout(function(){
-          virus.animations.play('die');
-        }, 2000);
-        setTimeout(function(){
-          virus.kill();
-          dieSound.play();
-          score += 20;
-          scoreText.text = scoreString + score; //score displayed
+      // if (virus.y < 200){ // top of map = -10 or something bottom is like 590?
+      //   virus.animations.stop('walk');
+      //   setTimeout(function(){
+      //     virus.animations.play('die');
+      //   }, 2000);
+      //   setTimeout(function(){
+      //     virus.kill();
+      //     dieSound.play();
+      //     score += 20;
+      //     scoreText.text = scoreString + score; //score displayed
           
-          blueViruses.remove(virus);
-        }, 2150);
-        virus.body.velocity.x = 50;
-        virus.body.velocity.y = 0;
-      }
-        //tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
+      //     blueViruses.remove(virus);
+      //   }, 2150);
+      //   virus.body.velocity.x = 50;
+      //   virus.body.velocity.y = 0;
+      // }
+        tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
     };
 
 
@@ -72,8 +72,8 @@ var blueVirus = function(that, x, y, number, virusDead) {
     virus.input.enableDrag(true);
     virus.input.boundsSprite = gameCanvas;
 
-    virus.events.onDragStart.add(startDrag, this);
-    virus.events.onDragStop.add(stopDrag, this);
+    // virus.events.onDragStart.add(startDrag, this);
+    // virus.events.onDragStop.add(stopDrag, this);
 
     virus.animations.add('walk', walkPNGs, 15, true);
     virus.animations.add('attack', attackPNGs, 15, true);
@@ -82,8 +82,10 @@ var blueVirus = function(that, x, y, number, virusDead) {
     virus.animations.play('walk');
 
     //var tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
-    virus.body.gravity.y = 600;
-    virus.body.velocity.x = 600;
+    virus.body.gravity.y = 300;
+    var scale = (Math.round(Math.random()) - 0.5) * 2;
+    virus.body.velocity.x = 60 * scale;
+    
 
   };
 
@@ -93,10 +95,11 @@ var blueVirus = function(that, x, y, number, virusDead) {
   
   for (var i = 0; i < number; i++) {
   	setTimeout(function() {
-  		var blueVirus = blueViruses.create(0+x, 480+y, 'viruses', "blue/walk/01.png");
+  		var blueVirus = blueViruses.create(600+x, 400+y, 'viruses', "blue/walk/01.png");
   		addMovement(blueVirus);
   	}, i*1000);
   }
+  // console.log('blueViruses:',blueViruses);
   
   //var blueVirus = game.add.sprite(0+x, 480+y, 'viruses', "blue/walk/01.png");
 

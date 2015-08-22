@@ -3,6 +3,7 @@ var createStage = function(that){
   // bg = that.game.add.sprite(0,0,'background');
   // bg.width = 800;
   // bg.height = 502;
+  that.game.world.setBounds(0, 0, 1200, 600);
 
   gameCanvas = that.game.add.sprite(0, 0, 'background');
   gameCanvas.width = 1200;

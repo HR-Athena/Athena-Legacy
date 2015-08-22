@@ -116,13 +116,13 @@ var comp2Sprite = function(that, x, y){ //x and y coordinates for positioning
   wheels2.anchor.setTo(0);
   wheels2.scale.x = -1; // specify direction
 
-  mainComp2 = that.game.add.sprite(1068+x, 350+y, 'maincomp', 'computer_01.png');
+  mainComp2 = that.game.add.sprite(1000+x, 350+y, 'maincomp', 'computer_01.png');
   mainComp2.animations.add('computer', ['computer_01.png','computer_02.png','computer_03.png','computer_04.png','computer_05.png'], 15, true);
   mainComp2.animations.play('computer');
   // original size: 142 x 150 - +50% size: 
   // mainComp2.width = ratio(142);
   // mainComp2.height = ratio(150);
-  mainComp2.anchor.setTo(0);
+  mainComp2.anchor.setTo(0.5, 0);
   mainComp2.scale.x = -1; // specify direction
 
   controlPanel2 = that.game.add.sprite(1068+x, 437+y, 'maincomp', 'control_center_04.png');
@@ -189,7 +189,7 @@ var missileHit = function(virus, missile){
   missile.body.gravity.y=-200;
   explodeSound.play();
   virus.kill();
-  // virus.parent.removeChild(virus);
+  virus.parent.removeChild(virus);
   missile.play('explode');
   missile.body.velocity.x=0;
   setTimeout(function(){
@@ -222,8 +222,9 @@ var fireMissiles = function(){
         explosions.children[i].animations.play('launch', 10, false, true);
         console.log(missiles[i]);
         missiles.children[i].visible = true;
-        missiles.children[i].body.gravity.y = 100;
-        missiles.children[i].body.velocity.x = -200 + (-400 * Math.random());
+        missiles.children[i].body.gravity.y = 200;
+        missiles.children[i].body.velocity.x = -200 + (-25 * i);
+        missiles.children[i].body.velocity.y = -20 + (-25 * i);
         
       }
   });
