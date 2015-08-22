@@ -34,17 +34,17 @@ var blueVirus = function(that, x, y) {
 
   var addMovement = function(virus){
 
-    var startDrag = function(virus){
-      virus.animations.play('airwalk');
-      virus.body.moves = false;
-      virus.input.boundsSprite = gameCanvas;
-      tween.pause();
-    };
+    // var startDrag = function(virus){
+    //   virus.animations.play('airwalk');
+    //   virus.body.moves = false;
+    //   virus.input.boundsSprite = gameCanvas;
+    //   tween.pause();
+    // };
 
-    var stopDrag = function(virus){
-      virus.body.moves = true;
-      virus.animations.play('walk');
-      virus.body.velocity.x = -100;
+    // var stopDrag = function(virus){
+    //   virus.body.moves = true;
+    //   virus.animations.play('walk');
+    //   virus.body.velocity.x = -100;
 
       // if (virus.y < 200){ // top of map = -10 or something bottom is like 590?
       //   virus.animations.stop('walk');
@@ -63,7 +63,7 @@ var blueVirus = function(that, x, y) {
       //   virus.body.velocity.y = 0;
       // }
         // tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
-    };
+    // };
 
 
   	that.game.physics.arcade.enable(virus);
@@ -85,6 +85,9 @@ var blueVirus = function(that, x, y) {
     virus.body.gravity.y = 300;
     var scale = (Math.round(Math.random()) - 0.5) * 2;
     virus.body.velocity.x = 60 * scale;
+    virus.body.bounce.y = 1;
+    virus.anchor.setTo(0.5,0);
+    virus.scale.x = scale;
 
 
   };

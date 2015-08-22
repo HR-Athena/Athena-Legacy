@@ -8,10 +8,11 @@ gameOver.prototype = {
   	create: function(){
   		//Game over screen
 
-  	// roundText = this.game.add.text(350, 250, 'You scored: ' + score,  { font: '16px Calibri', fill: '#fff' })
-  	var gameOverTitle = this.game.add.sprite(400,200,"gameover");
-		gameOverTitle.anchor.setTo(0.5,0.5);
-		var playButton = this.game.add.button(400,300,"play",this.playTheGame,this);
+  	roundText = this.game.add.text(600, 300, 'You Win!', { font: '32px Impact', fill: '#fff' });
+		roundText.anchor.setTo(0.5,0.5);
+    var gameOverTitle = this.game.add.sprite(600,200,"gameover");
+    gameOverTitle.anchor.setTo(0.5,0.5);
+		var playButton = this.game.add.button(600,400,"play",this.playTheGame,this);
 		playButton.anchor.setTo(0.5,0.5);
 	},
 	//Play button that resets HP, barProgress, and Round

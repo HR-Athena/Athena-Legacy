@@ -13,8 +13,7 @@ var health_player2 = 128;
 // var scoreString = '';
 // var scoreText;
 
-// var to check if spawning is happening
-var spawning = false;
+
 
 //Monsters
 var blueViruses; 
@@ -34,8 +33,7 @@ var explosions = {};
 // var currentRoundText;
 // var roundNumber = 1;
 
-//PopUp Box
-var popup;
+
 
 //Player objects
 var player1 = {
@@ -62,6 +60,8 @@ var socket;
 
 //Game object
 towerScum.prototype = {
+  // var to check if spawning is happening
+  spawning: false,
 
   createStartText: function(text){
     this.createPlayer1Text(text);
@@ -145,6 +145,12 @@ towerScum.prototype = {
     } 
     if (player1Text.text.length === 0) {
       // fire function that turns the viruses
+      blueViruses.forEach(function(virus) {
+        // var oldScale = virus.scale.x;
+        virus.scale.x *= -1;
+        virus.body.velocity.x *= -1.5;
+        console.log('scale:',virus.scale.x,'velocity:',virus.body.velocity.x);
+      }, this);
       this.destroyText(player1Text); // destroy original text
       this.createText('turn'); // make new text appear
 
@@ -162,8 +168,8 @@ towerScum.prototype = {
   attack_player1: function(computer, virus){
     virus.animations.play('attack', 15, false, true);
     virus.y = virus.y - 25;
+    health_player1 -= 10;
     virus.events.onAnimationComplete.add(function(){ //trigger another animation
-      health_player1 -= 50;
       virus.animations.play('die');
       setTimeout(function(){virus.kill();}, 400);
       // var context = this;
@@ -174,8 +180,8 @@ towerScum.prototype = {
   attack_player2: function(computer, virus){
     virus.animations.play('attack', 15, false, true);
     virus.y = virus.y - 25;
+    health_player2 -= 10;
     virus.events.onAnimationComplete.add(function(){ //trigger another animation
-      health_player2 -= 5;
       virus.animations.play('die');
       setTimeout(function(){virus.kill();}, 400);
       // var context = this;
@@ -184,10 +190,11 @@ towerScum.prototype = {
   },
 
   spawnVirus: function(context) {
-    spawning = true;
+    // console.log('spawnVirus called');
+    context.spawning = true;
     setTimeout(function() { 
+      context.spawning = false;
       blueVirus(context, 0, 0);
-      spawning = false;
     }, 1000);
   },
 
@@ -220,14 +227,14 @@ towerScum.prototype = {
     // computerCollision(this); //Loads collision line for right computer
     // leftComputerCollision(this); //Loads collision line for left computer
     // auto-spawn blue viruses
-    this.spawnVirus(this);
+    // this.spawnVirus(this);
     // blueVirus(this, 0, 0, 1)
     //redVirus(this, 0, 0, 3)
 
     // this.rounds[roundNumber](this); //Executes first round of monster (Round defaults as 1)
 
 
-    //health bar for right player
+    //health bar for right player2
     this.outerbar = this.add.bitmapData(134, 13);
     this.outerbar.context.fillStyle = '#00685e';
     this.outerbar.fill();
@@ -236,7 +243,7 @@ towerScum.prototype = {
     this.game.add.sprite(1063, 328, this.outerbar); //outerbar
     this.game.add.sprite(1130 - (this.bar.width * 0.5), 330, this.bar);//x and y coordinates of bar 700,300
 
-    //health bar for left player
+    //health bar for left player1
     this.outerbar2 = this.add.bitmapData(134, 13);
     this.outerbar2.context.fillStyle = '#00685e';
     this.outerbar2.fill();
@@ -245,59 +252,8 @@ towerScum.prototype = {
     this.game.add.sprite(2, 328, this.outerbar2); //outerbar
     this.game.add.sprite(69 - (this.bar2.width * 0.5), 330, this.bar2);//x and y coordinates of bar 700,300
 
-
-    //score related functions
-
-    // scoreString = 'Score : ';
-    // scoreText = this.game.add.text(10, 10, scoreString + score, { font: '28px Calibri', fill: '#fff' });
-
-
-    //Current Round:
-    // currentRound = 'Round : ';
-    // currentRoundText = this.game.add.text(1060, 10, currentRound + roundNumber, { font: '28px Calibri', fill: '#fff' });
-
-    //Round End Popup box
-    // popup = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'popup');
-    // popup.alpha = 0.0;
-    // popup.anchor.set(0.5);
-    // popup.inputEnabled = false;
-
-    // //Sets coordinates for okay button
-    // var pw = (popup.width/2) - 260;
-    // var ph = (popup.height / 2) - 8;
-
-    // //  And click the close button to close it down again
-    // var okayButton = this.game.make.sprite(pw, -ph, 'okay');
-    // okayButton.inputEnabled = true;
-    // okayButton.input.priorityID = 1;
-    // okayButton.input.useHandCursor = true;
-    // okayButton.events.onInputDown.add(this.nextRound, this);
-
-    // //Text for Round Cleared popup box
-    // roundString = 'ROUND CLEARED!';
-    // roundText = this.game.make.text(pw+60, -ph+50, roundString,  { font: '16px Calibri', fill: '#fff' });
-
-    // //Add Round Text and Okay Button to popup box
-    // popup.addChild(roundText);
-    // popup.addChild(okayButton);
-
-    // popup.scale.set(0.1);
-    //invisible platform for illusion of depth
-    // platform = this.game.add.group();
-
-    // //  We will enable physics for any object that is created in this group
-    // // Here we create the ground.
-    // var invisible = platform.create(0, this.game.world.height-60, 'invisible');
-    // this.game.physics.enable(invisible, Phaser.Physics.ARCADE);
-
-    // //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    // invisible.scale.x = this.game.world.width;
-    // invisible.body.immovable = true;
-    // invisible.renderable = false;
-   //  This stops it from falling away when you jump on it
-
-   //Create Start Text
-   this.createStartText('Starting');
+   //Create Text
+   this.createStartText("Starting");
    //Create Listen for key events
    this.game.input.keyboard.addCallbacks(this, null, null, this.emitKeypress);
   },
@@ -338,27 +294,27 @@ towerScum.prototype = {
     // this.game.physics.arcade.collide(blueViruses, missiles, missileHit, null, null);
     // this.game.physics.arcade.collide(blueViruses, platform);
 
-    this.game.physics.arcade.collide(redViruses, ground, null, null, null);
-    // this.game.physics.arcade.collide(redViruses, collisionLine, this.attack, null, null);
-    this.game.physics.arcade.collide(redViruses, missiles, missileHit, null, null);
-    // this.game.physics.arcade.collide(redViruses, platform);
+    // this.game.physics.arcade.collide(redViruses, ground, null, null, null);
+    // // this.game.physics.arcade.collide(redViruses, collisionLine, this.attack, null, null);
+    // this.game.physics.arcade.collide(redViruses, missiles, missileHit, null, null);
+    // // this.game.physics.arcade.collide(redViruses, platform);
 
-    this.game.physics.arcade.collide(yellowViruses, ground, null, null, null);
-    // this.game.physics.arcade.collide(yellowViruses, collisionLine, this.attack, null, null);
-    this.game.physics.arcade.collide(yellowViruses, missiles, missileHit, null, null);
-    // this.game.physics.arcade.collide(yellowViruses, platform);
+    // this.game.physics.arcade.collide(yellowViruses, ground, null, null, null);
+    // // this.game.physics.arcade.collide(yellowViruses, collisionLine, this.attack, null, null);
+    // this.game.physics.arcade.collide(yellowViruses, missiles, missileHit, null, null);
+    // // this.game.physics.arcade.collide(yellowViruses, platform);
 
-    this.game.physics.arcade.collide(swordyViruses, ground, null, null, null);
-    // this.game.physics.arcade.collide(swordyViruses, collisionLine, this.attack, null, null);
-    this.game.physics.arcade.collide(swordyViruses, missiles, missileHit, null, null);
-    // this.game.physics.arcade.collide(swordyViruses, platform);
+    // this.game.physics.arcade.collide(swordyViruses, ground, null, null, null);
+    // // this.game.physics.arcade.collide(swordyViruses, collisionLine, this.attack, null, null);
+    // this.game.physics.arcade.collide(swordyViruses, missiles, missileHit, null, null);
+    // // this.game.physics.arcade.collide(swordyViruses, platform);
 
-    this.game.physics.arcade.collide(goldswordyViruses, ground, null, null, null);
-    // this.game.physics.arcade.collide(goldswordyViruses, collisionLine, this.attack, null, null);
-    this.game.physics.arcade.collide(goldswordyViruses, missiles, missileHit, null, null);
-    // this.game.physics.arcade.collide(goldswordyViruses, platform);
+    // this.game.physics.arcade.collide(goldswordyViruses, ground, null, null, null);
+    // // this.game.physics.arcade.collide(goldswordyViruses, collisionLine, this.attack, null, null);
+    // this.game.physics.arcade.collide(goldswordyViruses, missiles, missileHit, null, null);
+    // // this.game.physics.arcade.collide(goldswordyViruses, platform);
 
-    this.game.physics.arcade.collide(ground, missiles, missileMiss, null, null);
+    // this.game.physics.arcade.collide(ground, missiles, missileMiss, null, null);
 
     this.game.physics.arcade.collide(player1.text, ground, this.destroyText, null, null);
     this.game.physics.arcade.collide(player2.text, ground, this.destroyText, null, null);
@@ -379,7 +335,7 @@ towerScum.prototype = {
     }
         
     this.bar.context.fillRect(0, 0, this.barProgress, 8);
-    this.game.add.tween(this).to({barProgress: health_player1}, 100, null, true, 0); //each hit health updates and bar shrinks
+    this.game.add.tween(this).to({barProgress: health_player2}, 10, null, true, 0); //each hit health updates and bar shrinks
 
     this.bar.dirty = true; //apparently this line is important but I dont know why
 
@@ -400,25 +356,13 @@ towerScum.prototype = {
     }
         
     this.bar2.context.fillRect(0, 0, this.barProgress2, 8);
-    this.game.add.tween(this).to({barProgress2: health_player2}, 100, null, true, 0); //each hit health updates and bar2 shrinks
+    this.game.add.tween(this).to({barProgress2: health_player1}, 10, null, true, 0); //each hit health updates and bar2 shrinks
 
     this.bar2.dirty = true; //apparently this line is important but I dont know why
-
-    //If the basic monster has spawned, that means the round has started
-    // if(blueViruses.children.length){
-    //   this.roundStarted = true;
-    // }
-
-    // console.log(this.barProgress);
-
-    //If the round has started, we can begin to check if all monsters are dead
-    // if(this.roundStarted){
-    //   this.endRound();
-    // }
  
     //If HP is 0, change comp image to be broken and change to GameOver game state
     if(this.barProgress <= 0){
-      console.log("You have lost!");
+      // console.log("You have won!");
       var brokenComp = this.game.add.sprite(1068, 350, 'brokenComp');
       // brokenComp.width = ratio(165);
       // brokenComp.height = ratio(142);
@@ -428,12 +372,29 @@ towerScum.prototype = {
       powerDownSound.play();
       var that = this;
       setTimeout(function(){
-        that.game.state.start("GameOver");
+        that.game.state.start("Win");
+        }, 1000); 
+    }
+
+    if(this.barProgress2 <= 0){
+      // console.log("You have won!");
+      var brokenComp2 = this.game.add.sprite(75, 350, 'brokenComp');
+      brokenComp2.anchor.setTo(0.5,0);
+      brokenComp2.scale.x = -1;
+      // brokenComp.width = ratio(165);
+      // brokenComp.height = ratio(142);
+      leftComp.kill();
+      controlPanel2.kill();
+      // this.roundStarted = false;
+      powerDownSound.play();
+      var that = this;
+      setTimeout(function(){
+        that.game.state.start("Lose");
         }, 1000); 
     }
 
     // check if we need to create any more viruses
-    if (blueViruses.total < 10 && spawning === false) {
+    if (this.spawning === false) {
       this.spawnVirus(this);
     }
 
