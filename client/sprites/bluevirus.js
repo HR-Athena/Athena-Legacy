@@ -34,39 +34,39 @@ var blueVirus = function(that, x, y, number, virusDead) {
 
   var addMovement = function(virus){
 
-  var startDrag = function(virus){
-    virus.animations.play('airwalk');
-    virus.body.moves = false;
-    virus.input.boundsSprite = bg;
-     //tween.pause();
-  };
+    var startDrag = function(virus){
+      virus.animations.play('airwalk');
+      virus.body.moves = false;
+      virus.input.boundsSprite = bg;
+       //tween.pause();
+    };
 
-  var stopDrag = function(virus){
-        virus.body.moves = true;
-        virus.animations.play('walk');
-        virus.body.velocity.x = -100;
-  
-        if (virus.y < 200){ // top of map = -10 or something bottom is like 590?
-          virus.animations.stop('walk');
-          setTimeout(function(){
-            virus.animations.play('die');
-          }, 2000);
-          setTimeout(function(){
-            virus.kill();
-            dieSound.play();
-            score += 20;
-            scoreText.text = scoreString + score; //score displayed
-            
-            blueViruses.remove(virus);
-          }, 2150);
-          virus.body.velocity.x = 50;
-          virus.body.velocity.y = 0;
-        }
+    var stopDrag = function(virus){
+      virus.body.moves = true;
+      virus.animations.play('walk');
+      virus.body.velocity.x = -100;
+
+      if (virus.y < 200){ // top of map = -10 or something bottom is like 590?
+        virus.animations.stop('walk');
+        setTimeout(function(){
+          virus.animations.play('die');
+        }, 2000);
+        setTimeout(function(){
+          virus.kill();
+          dieSound.play();
+          score += 20;
+          scoreText.text = scoreString + score; //score displayed
+          
+          blueViruses.remove(virus);
+        }, 2150);
+        virus.body.velocity.x = 50;
+        virus.body.velocity.y = 0;
+      }
         //tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
     };
 
 
-	that.game.physics.arcade.enable(virus);
+  	that.game.physics.arcade.enable(virus);
     virus.body.collideWorldBounds = true;
     virus.inputEnabled = true;
     virus.input.enableDrag(true);
@@ -82,16 +82,17 @@ var blueVirus = function(that, x, y, number, virusDead) {
     virus.animations.play('walk');
 
     //var tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
-    virus.body.gravity.y = 50 * (Math.random()-0.5);
-    virus.body.velocity.x = 100;
+    virus.body.gravity.y = 600;
+    virus.body.velocity.x = 600;
 
   };
 
   blueViruses = that.game.add.group();
   blueViruses.enableBody = true;
   blueViruses.physicsBodyType = Phaser.Physics.ARCADE;
-  for(var i = 0; i < number; i++){
-  	setTimeout(function(){
+  
+  for (var i = 0; i < number; i++) {
+  	setTimeout(function() {
   		var blueVirus = blueViruses.create(0+x, 480+y, 'viruses', "blue/walk/01.png");
   		addMovement(blueVirus);
   	}, i*1000);

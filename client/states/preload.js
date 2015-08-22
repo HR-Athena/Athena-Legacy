@@ -1,10 +1,10 @@
-var preload = function(game){}
+var preload = function(game){};
 
 preload.prototype = {
   preload: function(){ 
 
     //loading bar
-    var loadingBar = this.add.sprite(400,300,"loading");
+    var loadingBar = this.add.sprite(600,300,"loading");
     loadingBar.anchor.setTo(0.5,0.5);
     this.load.setPreloadSprite(loadingBar);
     //this.game.load.spritesheet("numbers","assets/numbers.png",100,100);
@@ -27,7 +27,7 @@ preload.prototype = {
     this.game.load.image("popup", "assets/popup.png");
     this.game.load.image("okay", "assets/okay.png");
     this.game.load.image("fire", "assets/fire.png");
-    this.game.load.image("invisible", "assets/invisible.png")
+    this.game.load.image("invisible", "assets/invisible.png");
     
     //load scripts
     this.game.load.script('loadSprites.js', 'sprites/loadSprites.js');
@@ -52,6 +52,7 @@ preload.prototype = {
   },
     create: function(){
     console.log('Preloading data...');
-    this.game.state.start("Menu");
+    // this.game.state.start("Menu");
+    this.game.state.start("TowerScum");
   }
 };

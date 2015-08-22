@@ -5,6 +5,8 @@ var towerScum = function(game){};
 
 //HP for player 1
 var health = 128;
+// HP for player 2
+var health_player2 = 128;
 
 //Score
 var score = 0;
@@ -64,12 +66,21 @@ towerScum.prototype = {
     } 
   },
   //Attack function
-  attack: function(virus){
+  attack: function(computer, virus){
     virus.animations.play('attack');
-    health -= 0.25;
+    health -= 25;
+    // virus.y = virus.y - 25;
+    var context = this;
+    setTimeout(virus.kill, 1000);
+    // sparkSound.play();
+  },
+
+  attack_player2: function(virus){
+    virus.animations.play('attack');
+    health_player2 -= 0.25;
     virus.y = virus.y - 25;
     var context = this;
-    sparkSound.play();
+    // sparkSound.play();
   },
   //Ratio to increase sprite size by 50%
   ratio: function(number){
@@ -112,7 +123,7 @@ towerScum.prototype = {
   //Rounds object that contains functions to spawn monsters for each level respectively
    rounds : {
   1: function(context){
-      blueVirus(context, 0, 0, 1);
+      blueVirus(context, 0, 0, 5);
     },
   2: function(context){
       blueVirus(context, 0, 0, 7);
@@ -188,8 +199,11 @@ towerScum.prototype = {
     
     createStage(this); //Loads stage
 
-    compSprite(this); //Loads Sprite
+    compSprite(this); //Loads right mainframe
+    comp2Sprite(this, -936, 0); //Loads left mainframe
     weapon(this); //Loads weapon
+    var myContext = this;
+    setInterval(function(){ weapon(myContext); }, 3000);
     computerCollision(this); //Loads collision line for computer
 
     //blueVirus(this, 0, 0, 5)
@@ -204,8 +218,17 @@ towerScum.prototype = {
     this.outerbar.fill();
     this.barProgress = 128;      
     this.bar = this.add.bitmapData(128, 10); //sets width and height for bar
-    this.game.add.sprite(633, 298, this.outerbar); //outerbar
-    this.game.add.sprite(700 - (this.bar.width * 0.5), 300, this.bar);//x and y coordinates of bar 700,300
+    this.game.add.sprite(1063, 328, this.outerbar); //outerbar
+    this.game.add.sprite(1130 - (this.bar.width * 0.5), 330, this.bar);//x and y coordinates of bar 700,300
+
+    //health bar for player 2
+    this.outerbar2 = this.add.bitmapData(134, 13);
+    this.outerbar2.context.fillStyle = '#00685e';
+    this.outerbar2.fill();
+    this.barProgress2 = 128;      
+    this.bar2 = this.add.bitmapData(128, 10); //sets width and height for bar
+    this.game.add.sprite(2, 328, this.outerbar2); //outerbar
+    this.game.add.sprite(69 - (this.bar2.width * 0.5), 330, this.bar2);//x and y coordinates of bar 700,300
 
 
     //score related functions
@@ -216,7 +239,7 @@ towerScum.prototype = {
 
     //Current Round:
     currentRound = 'Round : ';
-    currentRoundText = this.game.add.text(660, 10, currentRound + roundNumber, { font: '28px Calibri', fill: '#fff' });
+    currentRoundText = this.game.add.text(1060, 10, currentRound + roundNumber, { font: '28px Calibri', fill: '#fff' });
 
     //Round End Popup box
     popup = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'popup');
@@ -245,17 +268,17 @@ towerScum.prototype = {
 
     popup.scale.set(0.1);
     //invisible platform for illusion of depth
-    platform = this.game.add.group();
+    // platform = this.game.add.group();
 
-    //  We will enable physics for any object that is created in this group
-    // Here we create the ground.
-    var invisible = platform.create(0, this.game.world.height-60, 'invisible');
-    this.game.physics.enable(invisible, Phaser.Physics.ARCADE);
+    // //  We will enable physics for any object that is created in this group
+    // // Here we create the ground.
+    // var invisible = platform.create(0, this.game.world.height-60, 'invisible');
+    // this.game.physics.enable(invisible, Phaser.Physics.ARCADE);
 
-    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    invisible.scale.x = this.game.world.width;
-    invisible.body.immovable = true;
-    invisible.renderable = false;
+    // //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+    // invisible.scale.x = this.game.world.width;
+    // invisible.body.immovable = true;
+    // invisible.renderable = false;
    //  This stops it from falling away when you jump on it
 
    //Create Text
@@ -274,29 +297,31 @@ towerScum.prototype = {
 
     //Checks for collision with ground and computer. Computer collision executes attack function
     this.game.physics.arcade.collide(blueViruses, ground, null, null, null);
-    this.game.physics.arcade.collide(blueViruses, collisionLine, this.attack, null, null);
+    this.game.physics.arcade.collide(blueViruses, mainComp, this.attack, null, null);
     this.game.physics.arcade.collide(blueViruses, missiles, missileHit, null, null);
-    this.game.physics.arcade.collide(blueViruses, platform);
+    // this.game.physics.arcade.collide(blueViruses, platform);
 
     this.game.physics.arcade.collide(redViruses, ground, null, null, null);
-    this.game.physics.arcade.collide(redViruses, collisionLine, this.attack, null, null);
+    // this.game.physics.arcade.collide(redViruses, collisionLine, this.attack, null, null);
     this.game.physics.arcade.collide(redViruses, missiles, missileHit, null, null);
-    this.game.physics.arcade.collide(redViruses, platform);
+    // this.game.physics.arcade.collide(redViruses, platform);
 
     this.game.physics.arcade.collide(yellowViruses, ground, null, null, null);
-    this.game.physics.arcade.collide(yellowViruses, collisionLine, this.attack, null, null);
+    // this.game.physics.arcade.collide(yellowViruses, collisionLine, this.attack, null, null);
     this.game.physics.arcade.collide(yellowViruses, missiles, missileHit, null, null);
-    this.game.physics.arcade.collide(yellowViruses, platform);
+    // this.game.physics.arcade.collide(yellowViruses, platform);
 
     this.game.physics.arcade.collide(swordyViruses, ground, null, null, null);
-    this.game.physics.arcade.collide(swordyViruses, collisionLine, this.attack, null, null);
+    // this.game.physics.arcade.collide(swordyViruses, collisionLine, this.attack, null, null);
     this.game.physics.arcade.collide(swordyViruses, missiles, missileHit, null, null);
-    this.game.physics.arcade.collide(swordyViruses, platform);
+    // this.game.physics.arcade.collide(swordyViruses, platform);
 
     this.game.physics.arcade.collide(goldswordyViruses, ground, null, null, null);
-    this.game.physics.arcade.collide(goldswordyViruses, collisionLine, this.attack, null, null);
+    // this.game.physics.arcade.collide(goldswordyViruses, collisionLine, this.attack, null, null);
     this.game.physics.arcade.collide(goldswordyViruses, missiles, missileHit, null, null);
-    this.game.physics.arcade.collide(goldswordyViruses, platform);
+    // this.game.physics.arcade.collide(goldswordyViruses, platform);
+
+    this.game.physics.arcade.collide(ground, missiles, missileMiss, null, null);
 
     this.game.physics.arcade.collide(player1Text, ground, this.destroyText, null, null);
 
@@ -320,6 +345,27 @@ towerScum.prototype = {
 
     this.bar.dirty = true; //apparently this line is important but I dont know why
 
+    // health bar 2
+    this.bar2.context.clearRect(0, 0, this.bar2.width, this.bar2.height);
+     
+     //color changes based on 50% health and 25% health
+    if (this.barProgress2 < 32) {
+      this.bar2.context.fillStyle = '#f00';   
+    }
+    
+    else if (this.barProgress2 < 64) {
+      this.bar2.context.fillStyle = '#ff0';
+    }
+    
+    else {
+      this.bar2.context.fillStyle = '#0f0';
+    }
+        
+    this.bar2.context.fillRect(0, 0, this.barProgress2, 8);
+    this.game.add.tween(this).to({barProgress2: health_player2}, 100, null, true, 0); //each hit health updates and bar2 shrinks
+
+    this.bar2.dirty = true; //apparently this line is important but I dont know why
+
     //If the basic monster has spawned, that means the round has started
     if(blueViruses.children.length){
       this.roundStarted = true;
@@ -336,16 +382,16 @@ towerScum.prototype = {
     if(this.barProgress <= 0){
       console.log("You have lost!");
       var brokenComp = this.game.add.sprite(560, 310, 'brokenComp');
-      brokenComp.width = ratio(165);
-      brokenComp.height = ratio(142);
+      // brokenComp.width = ratio(165);
+      // brokenComp.height = ratio(142);
       mainComp.kill();
       controlPanel.kill();
       this.roundStarted = false;
       powerDownSound.play();
       var that = this;
-      setTimeout(function(){
-        that.game.state.start("GameOver",true,false,score);
-        }, 1000); 
+      // setTimeout(function(){
+      //   that.game.state.start("GameOver",true,false,score);
+      //   }, 1000); 
     }
 
   },
