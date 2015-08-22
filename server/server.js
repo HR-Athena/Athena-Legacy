@@ -110,6 +110,34 @@ app.post('/games/create', function(req, res){
   res.sendStatus(200);
 });
 
+
+app.get('/games/create', function(req, res){
+
+  console.log("HERE IS A GET REQUEST FROM SLACK");
+  console.log(req.query);
+  // console.log("whole req", req);
+
+  var url  = 'https://hooks.slack.com/services/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';
+  var payload = { "channel": "#random", 
+                        "username": "webhookbot", 
+                        "text": "I got something" + JSON.stringify(req.query),
+                        "icon_emoji": ":ghost:"
+              };
+
+  request({
+    url: url,
+    method: "POST",
+    json: true,
+    body: payload 
+}, function (error, response, body){
+});
+
+  res.sendStatus(200);
+});
+
+
+
+
 app.get('/', function(req, res){
   // var id = req.query.id
   console.log("Hey");
