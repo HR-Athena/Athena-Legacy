@@ -1,4 +1,6 @@
 var player;
+var roomId = location.match(/id=(.*)&/)[1];
+var name = location.match(/player=@?(.*)/)[1];
 
 // ========== THIS IS THE SOCKET AREA ==========
 var socket = null;
@@ -33,8 +35,6 @@ connect();
 
 // ========== END OF THE SOCKET AREA ==========
 
-var roomId = location.match(/id=(.*)&/)[1];
-var name = location.match(/player=@?(.*)/)[1];
 // var credentials = {roomId: roomId, name: name};
 
 $(document).keypress(function(e){
