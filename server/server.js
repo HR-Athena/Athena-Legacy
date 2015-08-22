@@ -68,15 +68,16 @@ io.on("connection", function(socket){
         console.log("player 1 if statement");
         games[gameId].player1 = socket;
         socket.emit("assign player", "player1");
-      } else if(!games[gameId].player2)
+      } else if(!games[gameId].player2){
         console.log("player 2 if statement");
         games[gameId].player2 = socket;
         socket.emit("assign player", "player2");
-    } else {
-      if(!games[gameId].viewers){
-        games[gameId].viewers = [];
+      } else {
+        if(!games[gameId].viewers){
+          games[gameId].viewers = [];
+        }
+        games[gameId].viewers.push(socket);
       }
-      games[gameId].viewers.push(socket);
     }
     console.log("the games object now is:", games);
     sockets.splice(sockets.indexOf(socket), 1);
