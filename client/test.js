@@ -38,7 +38,7 @@ connect();
 // var credentials = {roomId: roomId, name: name};
 
 $(document).keypress(function(e){
-  socket.emit("keypress", {credentials: {roomId: roomId, name: name, player: player}, data: String.fromCharCode(e.keyCode)});
+  socket.emit("keypress", {credentials: {id: roomId, name: name, player: player}, data: String.fromCharCode(e.keyCode)});
 });
 
 var printText = function(message){

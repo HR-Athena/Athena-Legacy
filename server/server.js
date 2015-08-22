@@ -85,6 +85,7 @@ io.on("connection", function(socket){
 
   socket.on("keypress", function(message){
     console.log("detected a keypress");
+    console.log("received a message:", message);
     var gameId = message.credentials.id;
     var player = message.credentials.player;
     var sockets = games[gameId].players;
