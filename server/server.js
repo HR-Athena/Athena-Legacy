@@ -47,11 +47,13 @@ io.on("connection", function(socket){
       if (games[key] && games[key].player2 === socket){
         games[key].player2 = undefined;
       }
-      for(var i = 0; i < games[key].viewers.length; i++){
-        if(games[key].viewers[i] === socket){
-          games[key].viewers.splice(i, 1);
+      if(games[key] && games[key].viewers){
+        for(var i = 0; i < games[key].viewers.length; i++){
+          if(games[key].viewers[i] === socket){
+            games[key].viewers.splice(i, 1);
+          }
         }
-      }
+      } 
     }
 
   });
