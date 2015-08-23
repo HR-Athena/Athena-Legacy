@@ -53,7 +53,8 @@ var textStyle = {
   font: '24pt sans-serif',
   // fill: '#FF8E61',
   fill: '#FFF',
-  wordWrap: true
+  wordWrap: true,
+  wordWrapWidth: 300,
 };
 
 //Socket
@@ -124,91 +125,6 @@ towerScum.prototype = {
     };
     socket.emit("keypress", JSON.stringify(data));
   },
-
-  // verifyInput: function(data) {
-  //   data = JSON.parse(data.data);
-  //   // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
-  //   if (data.player1.updateText !== '') {
-  //     console.log("player1: ", data.player1.updateText);
-  //     this.createPlayer1Text(data.player1.updateText);
-  //     player1.updateText = '';
-  //   } 
-  //   if (player1.text !== data.player1.text) {
-  //     console.log('updating p1 text: ', data.player1.text);
-  //     player1.text.text = data.player1.text;
-  //   } 
-  //   if (data.player2.updateText !== '') {
-  //     console.log("player2: ", data.player2.updateText);
-  //     this.createPlayer2Text(data.player2.updateText);
-  //     player2.updateText = '';
-  //   }
-  //   if (player2.text !== data.player2.text) {
-  //     console.log('updating p2 text: ', data.player2.text);
-  //     player2.text.text = data.player2.text;
-  //   } 
-  //   if (player1.text.length === 0) {
-  //     // fire function that turns the viruses
-  //     blueViruses.forEach(function(virus) {
-  //       // var oldScale = virus.scale.x;
-  //       virus.scale.x *= -1;
-  //       virus.body.velocity.x *= -1.2;
-  //     }, this);
-  //     this.makeVirus(this);
-  //     // this.destroyText(player1Text); // destroy original text
-  //     // this.createText('turn'); // make new text appear
-  //   }
-  // },
-
-  // verifyInput: function(char) {
-  //   if (this.isPlayer) {
-  //     if (char === player1Text.text[0]) {
-  //       player1Text.text = player1Text.text.slice(1);
-  //     } 
-  //     if (player1Text.text.length === 0) {
-  //       // fire function that turns the viruses
-  //       blueViruses.forEach(function(virus) {
-  //         virus.scale.x *= -1;
-  //         virus.body.velocity.x *= -1.2;
-  //       }, this);
-  //       this.makeVirus(this);
-  //       console.log(player1Text.y);
-  //       this.createText('turn'); // make new text appear
-  //     }
-  //   }
-  // },
-
-  // createText2: function(text, game) {
-  //   player2Text = this.game.add.text(1000, 0, text, {fill: 'white'});
-  //   // Defaults to ARCADE physics
-  //   this.game.physics.arcade.enable(player2Text);
-  //   player2Text.body.velocity.setTo(0, 60);
-  // },
-
-  // destroyText2: function(text) {
-  //   // Remove the text form view
-  //   var temp = text.text;
-  //   text.exists = false;
-  //   temp += ' turn';
-  //   this.createText2(temp);
-  // },
-
-  // verifyInput2: function(char) {
-  //   if (!this.isPlayer) {
-  //     if (char === player2Text.text[0]) {
-  //       player2Text.text = player2Text.text.slice(1);
-  //     } 
-  //     if (player2Text.text.length === 0) {
-  //       // fire function that turns the viruses
-  //       blueViruses.forEach(function(virus) {
-  //         virus.scale.x *= -1;
-  //         virus.body.velocity.x *= -1.2;
-  //       }, this);
-  //       this.makeVirus(this);
-  //       console.log(player2Text.y);
-  //       this.createText2('turn'); // make new text appear
-  //     }
-  //   }
-  // },
 
   //Attack function
   attack_player1: function(computer, virus){
@@ -317,6 +233,10 @@ towerScum.prototype = {
 
      if (data.player1.updateText !== '') {
       player1.counter++;
+      if (player1.counter >= 5){
+        player1.counter = 0;
+        player1.level++;
+      }
       this.createPlayer1Text(data.player1.updateText);
       player1.updateText = '';
       blueViruses.forEach(function(virus) {
@@ -327,7 +247,10 @@ towerScum.prototype = {
      } 
 
      if (data.player2.updateText !== '') {
-      player2.counter++;
+      if (player2.counter >= 5){
+        player2.counter = 0;
+        player2.level++;
+      }
       this.createPlayer2Text(data.player2.updateText);
       player2.updateText = '';
       blueViruses.forEach(function(virus) {
@@ -336,10 +259,6 @@ towerScum.prototype = {
         }, this);
         this.makeVirus(this);
      }
-
-     console.log("P1 Count: ", player1.counter);
-     console.log("P2 Count: ", player2.counter);
-
    //Early-Stage binding to properly refer to 'this'
    }).bind(this));
   },
