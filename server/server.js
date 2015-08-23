@@ -41,15 +41,15 @@ io.on("connection", function(socket){
       console.log("key", key);
       console.log("games", games);
       console.log("games.key", games.key);
-      if (games.key && games.key.player1 === socket){
-        games.key.player1 = undefined;
+      if (games[key] && games[key].player1 === socket){
+        games[key].player1 = undefined;
       }
-      if (games.key && games.key.player2 === socket){
-        games.key.player2 = undefined;
+      if (games[key] && games[key].player2 === socket){
+        games[key].player2 = undefined;
       }
-      for(var i = 0; i < games.key.viewers.length; i++){
-        if(games.key.viewers[i] === socket){
-          games.key.viewers.splice(i, 1);
+      for(var i = 0; i < games[key].viewers.length; i++){
+        if(games[key].viewers[i] === socket){
+          games[key].viewers.splice(i, 1);
         }
       }
     }
