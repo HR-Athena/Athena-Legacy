@@ -8,7 +8,7 @@ youLose.prototype = {
     create: function(){
       //Game over screen
 
-    roundText = this.game.add.text(600, 300, 'You Lose!', { font: '32px Impact', fill: '#fff' });
+    roundText = this.game.add.text(600, 300, 'Player 2 Wins!', { font: '32px Impact', fill: '#fff' });
     roundText.anchor.setTo(0.5,0.5);
     var gameOverTitle = this.game.add.sprite(600,200,"gameover");
     gameOverTitle.anchor.setTo(0.5,0.5);

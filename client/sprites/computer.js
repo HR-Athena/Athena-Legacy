@@ -66,31 +66,19 @@ var compSprite = function(that, x, y){ //x and y coordinates for positioning
   y = y || 0;
 
   wheels = that.game.add.sprite(1128+x, 468+y, 'maincomp', 'wheels_01.png');
-  // wheels.animations.add('spin', ['wheels_01.png','wheels_02.png','wheels_03.png','wheels_04.png','wheels_05.png'], 15, true);
-  // wheels.animations.play('spin');
-  // console.log(wheels.width);
-  // console.log(wheels.height);
-  // wheels.width = ratio(74);
-  // wheels.height = ratio(32);
+  wheels.animations.add('spin', ['wheels_01.png','wheels_02.png','wheels_03.png','wheels_04.png','wheels_05.png'], 15, true);
+  wheels.animations.play('spin');
   wheels.anchor.setTo(0);
-  // wheels.scale.x = scale; // specify direction
 
   rightComp = that.game.add.sprite( 1068+x, 350+y, 'maincomp', 'computer_01.png');
-  // rightComp.animations.add('computer', ['computer_01.png','computer_02.png','computer_03.png','computer_04.png','computer_05.png'], 15, true);
-  // rightComp.animations.play('computer');
-  //original size: 142 x 150 - +50% size: 
-  // rightComp.width = ratio(142);
-  // rightComp.height = ratio(150);
+  rightComp.animations.add('computer', ['computer_01.png','computer_02.png','computer_03.png','computer_04.png','computer_05.png'], 15, true);
+  rightComp.animations.play('computer');
   rightComp.anchor.setTo(0);
-  // rightComp.scale.x = scale; // specify direction
 
   controlPanel = that.game.add.sprite(1068+x, 437+y, 'maincomp', 'control_center_04.png');
-  // controlPanel.animations.add('blink', ['control_center_01.png', 'control_center_02.png', 'control_center_03.png', 'control_center_04.png', 'control_center_05.png'], 15, true);
-  // controlPanel.animations.play('blink');
-  // controlPanel.width = ratio(72);
-  // controlPanel.height = ratio(48);
+  controlPanel.animations.add('blink', ['control_center_01.png', 'control_center_02.png', 'control_center_03.png', 'control_center_04.png', 'control_center_05.png'], 15, true);
+  controlPanel.animations.play('blink');
   controlPanel.anchor.setTo(0);
-  // controlPanel.scale.x = scale; // specify direction
   that.game.physics.enable(rightComp, Phaser.Physics.ARCADE);
   rightComp.body.immovable = true;
 };
@@ -101,29 +89,20 @@ var comp2Sprite = function(that, x, y){ //x and y coordinates for positioning
   y = y || 0;
 
   wheels2 = that.game.add.sprite(1008+x, 470+y, 'maincomp', 'wheels_01.png');
-  // wheels2.animations.add('spin', ['wheels_01.png','wheels_02.png','wheels_03.png','wheels_04.png','wheels_05.png'], 15, true);
-  // wheels2.animations.play('spin');
-  // console.log(wheels2.width);
-  // console.log(wheels2.height);
-  // wheels2.width = ratio(74);
-  // wheels2.height = ratio(32);
+  wheels2.animations.add('spin', ['wheels_01.png','wheels_02.png','wheels_03.png','wheels_04.png','wheels_05.png'], 15, true);
+  wheels2.animations.play('spin');
   wheels2.anchor.setTo(0);
   wheels2.scale.x = -1; // specify direction
 
   leftComp = that.game.add.sprite(1000+x, 350+y, 'maincomp', 'computer_01.png');
-  // leftComp.animations.add('computer', ['computer_01.png','computer_02.png','computer_03.png','computer_04.png','computer_05.png'], 15, true);
-  // leftComp.animations.play('computer');
-  // original size: 142 x 150 - +50% size: 
-  // leftComp.width = ratio(142);
-  // leftComp.height = ratio(150);
+  leftComp.animations.add('computer', ['computer_01.png','computer_02.png','computer_03.png','computer_04.png','computer_05.png'], 15, true);
+  leftComp.animations.play('computer');
   leftComp.anchor.setTo(0.5, 0);
   leftComp.scale.x = -1; // specify direction
 
   controlPanel2 = that.game.add.sprite(1068+x, 437+y, 'maincomp', 'control_center_04.png');
-  // controlPanel2.animations.add('blink', ['control_center_01.png', 'control_center_02.png', 'control_center_03.png', 'control_center_04.png', 'control_center_05.png'], 15, true);
-  // controlPanel2.animations.play('blink');
-  // controlPanel2.width = ratio(72);
-  // controlPanel2.height = ratio(48);
+  controlPanel2.animations.add('blink', ['control_center_01.png', 'control_center_02.png', 'control_center_03.png', 'control_center_04.png', 'control_center_05.png'], 15, true);
+  controlPanel2.animations.play('blink');
   controlPanel2.anchor.setTo(0);
   controlPanel2.scale.x = -1; // specify direction
 

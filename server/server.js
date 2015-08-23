@@ -18,26 +18,31 @@ var sockets = [];
 io.on("connection", function(socket){
   console.log("a user connected");
   sockets.push(socket); // add a new socket to the sockets list
+  console.log(sockets.length,'sockets now connected');
+  console.log("at id:",sockets.indexOf(socket));
 
   socket.on('disconnect', function () {
     sockets.splice(sockets.indexOf(socket), 1);
+    console.log('a user disconnected');
+    console.log(sockets.length,'sockets now connected');
     // updateRoster();
   });
 
   //Sync key presses between views
   socket.on("keypress", function(data){
+    var playerLevel, newText;
     data = JSON.parse(data);
     var socketId = sockets.indexOf(socket);
-    //Player 1 Checks if socketid is 1
-    if (socketId === 1) {
+    //Player 1 Checks if socketid is 0
+    if (socketId === 0) {
       //Check player 1 text
       if (data.input === data.player1.text[0]) {
         data.player1.text = data.player1.text.slice(1);
         if (data.player1.text.length === 0) {
           //Add new text string
-          if (data.player1.counter >= 5) {
+          if (data.player2.counter % 5 === 0 && data.player2.level < 10) {
             //Reset player counter
-            data.player1.counter = 0;
+            // data.player1.counter = 0;
             //Increment level
             data.player1.level++;
             var playerLevel = data.player1.level;
@@ -48,8 +53,8 @@ io.on("connection", function(socket){
               data.player1.updateText = newText;
             }
           } else {
-            var playerLevel = data.player1.level;
-            var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
+            playerLevel = data.player1.level;
+            newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
             if (!newText) {
               data.player1.updateText = textStore[playerLevel][0];
             } else {
@@ -61,28 +66,28 @@ io.on("connection", function(socket){
       } else {
         //Do Something
       }
-    // Player 2 Checks
-    } else {
+    // Player 2 Checks if socketId is 1
+    } else if (socketId === 1) {
       //Check player2 Text
       if (data.input === data.player2.text[0]) {
         data.player2.text = data.player2.text.slice(1);
         if (data.player2.text.length === 0) {
           //Add new text string
-          if (data.player2.counter >= 5) {
+          if (data.player2.counter % 5 === 0 && data.player2.level < 10) {
             //Reset player counter
-            data.player2.counter = 0;
+            // data.player2.counter = 0;
             //Increment level
             data.player2.level++;
-            var playerLevel = data.player2.level;
-            var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
+            playerLevel = data.player2.level;
+            newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
             if (!newText) {
               data.player2.updateText = textStore[playerLevel][0];
             } else {
               data.player2.updateText = newText;
             }
           } else {
-            var playerLevel = data.player2.level;
-            var newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
+            playerLevel = data.player2.level;
+            newText = textStore[playerLevel][Math.floor( Math.random() * textStore[playerLevel].length-1 )];
             if (!newText) {
               data.player2.updateText = textStore[playerLevel][0];
             } else {
