@@ -107,22 +107,22 @@ towerScum.prototype = {
   },
 
   emitKeypress: function(char) {
-    console.log('id:',roomId,'player:',player);
+    // console.log('id:',roomId,'player:',player);
     data = {
       'player1': {
         level: player1.level,
         counter: player1.counter,
-        updateText: player1.updateText,
-        text: player1.text.text
+        updateText: player1.updateText
+        // text: player1.text.text // I need to not send this
       },
       'player2': {
         level: player2.level,
         counter: player2.counter,
-        updateText: player2.updateText,
-        text: player2.text.text
+        updateText: player2.updateText
+        // text: player2.text.text // I need to not send this
       },
       'input': char,
-      'credentials': {id: roomId, name: name, player: player}
+      'credentials': {id: roomId, player: player}
     };
     socket.emit("keypress", JSON.stringify(data));
     // socket.emit("keypress", data);
@@ -224,12 +224,13 @@ towerScum.prototype = {
    this.createStartText('Starting');
    //Create Listen for key events
    this.game.input.keyboard.addCallbacks(this, null, null, this.emitKeypress);
+   
    socket.on('returning the player data', (function(data){
      //Call function to verify input
      // this.verifyInput(data);
 
      // data = JSON.parse(data.data);
-     console.log('client:',data);
+     // console.log('client:',data);
      // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
      // console.log('data.player1',data.data.player1);
      // console.log('player1.text',player1.text);

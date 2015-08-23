@@ -89,58 +89,74 @@ io.on("connection", function(socket){
   //Sync key presses between views
   socket.on("keypress", function(data){
     data = JSON.parse(data);
-    console.log('data received from client:',data);
-    var player1Level, newText1, player2Level, newText2;
+    // console.log('data received from client:',data);
+    var player1Level, newText1, player2Level, newText2, updateText1, updateText2;
+    // newText1 = 'Starting';
+    // newText2 = 'Starting';
     var gameId = data.credentials.id;
     var player = data.credentials.player;
     var player1Socket = games[gameId].player1;
     var player2Socket = games[gameId].player2;
+    // console.log('games[gameId]:',games[gameId]);
     var roomSockets = [];
     if(player1Socket){
+      if (player1Socket.text === undefined) {
+        player1Socket.text = 'Starting';
+      }
       roomSockets.push(player1Socket);
     }
     if(player2Socket){
+      if (player2Socket.text === undefined) {
+        player2Socket.text = 'Starting';
+      }
       roomSockets.push(player2Socket);
     }
     if(games[gameId].viewers){
       roomSockets = roomSockets.concat(games[gameId].viewers);
     }
 
-    // var socketId = sockets.indexOf(socket);
-    //Player 1 Checks if socketid is 0
     if (player === 'player1') {
       //Check player 1 text
-      if (data.input === data.player1.text[0]) {
-        data.player1.text = data.player1.text.slice(1);
-        if (data.player1.text.length === 0) {
+      if (data.input === player1Socket.text[0]) {
+      // if (data.input === data.player1.text[0]) {
+        player1Socket.text = player1Socket.text.slice(1);
+        data.player1.text = player1Socket.text;
+        if (player1Socket.text.length === 0) {
           player1Level = data.player1.level;
-          newText1 = textStore[player1Level][Math.floor( Math.random() * textStore[player1Level].length-1 )];
+          // console.log('level:',player1Level,'textStore:',textStore[player1Level]);
           if (!newText1) {
             data.player1.updateText = textStore[player1Level][0];
+            player1Socket.text = data.player1.updateText;
           } else {
             data.player1.updateText = newText1;
+            player1Socket.text = data.player1.updateText;
           }
         }
       }
     // Player 2 Checks if socketId is 1
     } else if (player === 'player2') {
       //Check player2 Text
-      if (data.input === data.player2.text[0]) {
-        data.player2.text = data.player2.text.slice(1);
-        if (data.player2.text.length === 0) {
-          player2Level = data.player2.level;
-          newText2 = textStore[player2Level][Math.floor( Math.random() * textStore[player2Level].length-1 )];
-          if (!newText2) {
-            data.player2.updateText = textStore[player2Level][0];
+      if (data.input === player2Socket.text[0]) {
+      // if (data.input === data.player1.text[0]) {
+        player2Socket.text = player2Socket.text.slice(1);
+        data.player2.text = player2Socket.text;
+        if (player2Socket.text.length === 0) {
+          player1Level = data.player2.level;
+          // console.log('level:',player1Level,'textStore:',textStore[player1Level]);
+          if (!newText1) {
+            data.player2.updateText = textStore[player1Level][0];
+            player2Socket.text = data.player2.updateText;
           } else {
-            data.player2.updateText = newText2;
+            data.player2.updateText = newText1;
+            player2Socket.text = data.player2.updateText;
           }
         }
       }
     }
-
+    
     roomSockets.forEach(function(socket){
-      console.log('data to emit to client:',data);
+      console.log('player1 data to client:',data.player1);
+      console.log('player2 data to client:',data.player2);
       socket.emit("returning the player data", {data: data});
     });
     // io.emit("returning the player data", {id: socketId, data: JSON.stringify(data)});
