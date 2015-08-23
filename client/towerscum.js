@@ -107,6 +107,7 @@ towerScum.prototype = {
   },
 
   emitKeypress: function(char) {
+    console.log('id:',roomId,'player:',player);
     data = {
       'player1': {
         level: player1.level,
@@ -120,9 +121,11 @@ towerScum.prototype = {
         updateText: player2.updateText,
         text: player2.text.text
       },
-      'input': char
+      'input': char,
+      'credentials': {id: roomId, name: name, player: player}
     };
     socket.emit("keypress", JSON.stringify(data));
+    // socket.emit("keypress", data);
   },
 
   //Attack function
@@ -225,15 +228,20 @@ towerScum.prototype = {
      //Call function to verify input
      // this.verifyInput(data);
 
-     data = JSON.parse(data.data);
-     console.log(data);
+     // data = JSON.parse(data.data);
+     console.log('client:',data);
      // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
-     player1.text.text = data.player1.text;
-     player2.text.text = data.player2.text;
+     // console.log('data.player1',data.data.player1);
+     // console.log('player1.text',player1.text);
+     player1.text.text = data.data.player1.text;
+     player2.text.text = data.data.player2.text;
 
-     if (data.player1.updateText !== '') {
+     if (data.data.player1.updateText !== '') {
       player1.counter++;
-      this.createPlayer1Text(data.player1.updateText);
+      if (player1.counter % 5 === 0) {
+        player1.level++;
+      }
+      this.createPlayer1Text(data.data.player1.updateText);
       player1.updateText = '';
       blueViruses.forEach(function(virus) {
           virus.scale.x *= -1;
@@ -242,9 +250,12 @@ towerScum.prototype = {
         this.makeVirus(this);
      } 
 
-     if (data.player2.updateText !== '') {
+     if (data.data.player2.updateText !== '') {
       player2.counter++;
-      this.createPlayer2Text(data.player2.updateText);
+      if (player2.counter % 5 === 0) {
+        player2.level++;
+      }
+      this.createPlayer2Text(data.data.player2.updateText);
       player2.updateText = '';
       blueViruses.forEach(function(virus) {
           virus.scale.x *= -1;

@@ -19,7 +19,7 @@ menu.prototype = {
   //Function to change state to TowerScum
   playTheGame: function(){
     console.log('Rendering menu...');
-    socket.emit("Start the game");
+    socket.emit("Start the game", {id: roomId, player: player});
     // this.game.state.start("TowerScum");
   },
   listenToMessages: function(){
