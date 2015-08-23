@@ -39,7 +39,7 @@ var goldSwordy = function(that, x, y, number){ //x and y coordinates for positio
       virus.animations.play('airwalk');
       virus.body.moves = false;
       console.log('startDrag on goldswordy');
-    }
+    };
 
   var stopDrag = function(virus){
         virus.body.moves = true;
@@ -66,7 +66,7 @@ var goldSwordy = function(that, x, y, number){ //x and y coordinates for positio
           virus.body.velocity.y = 0;
         }
         //tween = that.game.add.tween(virus).to({ x: that.game.width }, 10000, Phaser.Easing.Linear.None, true);
-    }
+    };
 
   that.game.physics.arcade.enable(virus);
     virus.body.collideWorldBounds = true;

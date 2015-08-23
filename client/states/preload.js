@@ -1,10 +1,11 @@
-var preload = function(game){}
+var preload = function(game){};
 
 preload.prototype = {
-  preload: function(){ 
+  preload: function(){
+    this.game.stage.disableVisibilityChange = true;
 
     //loading bar
-    var loadingBar = this.add.sprite(400,300,"loading");
+    var loadingBar = this.add.sprite(600,300,"loading");
     loadingBar.anchor.setTo(0.5,0.5);
     this.load.setPreloadSprite(loadingBar);
     //this.game.load.spritesheet("numbers","assets/numbers.png",100,100);
@@ -27,7 +28,7 @@ preload.prototype = {
     this.game.load.image("popup", "assets/popup.png");
     this.game.load.image("okay", "assets/okay.png");
     this.game.load.image("fire", "assets/fire.png");
-    this.game.load.image("invisible", "assets/invisible.png")
+    this.game.load.image("invisible", "assets/invisible.png");
     
     //load scripts
     this.game.load.script('loadSprites.js', 'sprites/loadSprites.js');
@@ -42,16 +43,17 @@ preload.prototype = {
     this.game.load.script('makeSparks','sprites/sparks.js');
 
     //load sound
-    this.game.load.audio('bg', ['fx/bg.mp3']);
-    this.game.load.audio('powerDown', ['fx/power_down.mp3']);
-    this.game.load.audio('sparks', ['fx/spark.mp3']);
-    this.game.load.audio('die', ['fx/die.mp3']);
-    this.game.load.audio('explode', ['fx/explode.mp3']);
+    // this.game.load.audio('bg', ['fx/bg.mp3']);
+    // this.game.load.audio('powerDown', ['fx/power_down.mp3']);
+    // this.game.load.audio('sparks', ['fx/spark.mp3']);
+    // this.game.load.audio('die', ['fx/die.mp3']);
+    // this.game.load.audio('explode', ['fx/explode.mp3']);
 
 
   },
     create: function(){
     console.log('Preloading data...');
     this.game.state.start("Menu");
+    // this.game.state.start("TowerScum");
   }
 };
