@@ -12,6 +12,8 @@ var server = http.createServer(app);
 var io = socketio.listen(server);
 
 app.use(express.static(__dirname + "/../client"));
+app.use("/original", express.static(__dirname + "/../original-version"));
+
 // app.use(favicon(__dirname + '/../client/favicon.ico'));
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
