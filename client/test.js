@@ -10,9 +10,11 @@ function connect() {
       });
       socket.on('connect', function() {
         console.log('Connected');
-        roomId = location.search.match(/id=(.*)&?/)[1];
         if (location.search.match(/player=@?(.*)/)) {
+          roomId = location.search.match(/id=(.*)&/)[1];
           name = location.search.match(/player=@?(.*)/)[1];
+        } else if (location.search.match(/id=(.*)/)){
+          roomId = location.search.match(/id=(.*)&/)[1];
         }
         socket.emit("credentials", {id: roomId, name: name});
       });
