@@ -25,7 +25,6 @@ function connect() {
 
       socket.on('returning the key', function(data) {
         console.log("from server:", data);
-        // printText(data);
       });
 
       socket.on('assign player', function(data) {
@@ -34,12 +33,10 @@ function connect() {
       });
 
     }
-    // socket.socket.connect();
 }
 connect();
 
 // ========== END OF THE SOCKET AREA ==========
-
 
 // prevent backspace
 $(document).on("keydown", function (e) {
@@ -47,19 +44,3 @@ $(document).on("keydown", function (e) {
     e.preventDefault();
   }
 });
-
-
-// var credentials = {roomId: roomId, name: name};
-
-// $(document).keypress(function(e){
-//   socket.emit("keypress", {credentials: {id: roomId, name: name, player: player}, data: String.fromCharCode(e.keyCode)});
-// });
-
-// var printText = function(message){
-//   console.log("receiving message", message);
-//   if(message.player === "player1"){
-//     $('.player1 span').append(message.data);
-//   } else if(message.player === "player2"){
-//     $('.player2 span').append(message.data);
-//   }
-// };

@@ -33,17 +33,7 @@ io.on("connection", function(socket){
   console.log(sockets.length,'sockets now connected');
   console.log("at id:",sockets.indexOf(socket));
 
-  // socket.on('disconnect', function () {
-  //   sockets.splice(sockets.indexOf(socket), 1);
-  //   console.log('a user disconnected');
-  //   console.log(sockets.length,'sockets now connected');
-  //   // updateRoster();
-  // });
-
   socket.on('disconnect', function () {
-    // sockets.splice(sockets.indexOf(socket), 1);
-    // updateRoster();
-    // console.log("games during disconnect", games);
     console.log("sockets", sockets.indexOf(socket));
     if(sockets.indexOf(socket) !== -1){
       console.log("found socket in the sockets array");
@@ -136,11 +126,6 @@ io.on("connection", function(socket){
 
   //Sync key presses between views
   socket.on("keypress", function(data){
-    // data = JSON.parse(data);
-    // console.log('data received from client:',data);
-    // var player1Level, newText1, player2Level, newText2, updateText1, updateText2;
-    // newText1 = 'Starting';
-    // newText2 = 'Starting';
     var char = data.input;
     var gameId = data.id;
     var player = data.player;
@@ -204,29 +189,7 @@ io.on("connection", function(socket){
     }
   });
 
-  // socket.on('message', function (msg) {
-  //   var text = String(msg || '');
-
-  //   if (!text)
-  //     return;
-
-  //   socket.get('name', function (err, name) {
-  //     var data = {
-  //       name: name,
-  //       text: text
-  //     };
-
-  //     broadcast('message', data);
-  //     messages.push(data);
-  //   });
-  // });
-
-
 });
-
-// app.listen(port, function() {
-//     console.log('Tower Scum is running on http://localhost:' + port);
-// });
 
 
 // ========== THIS IS THE SOCKET-RELATED MAGIC ==========

@@ -2,7 +2,7 @@
 <html>
   <head>
   <meta charset="UTF-8">
-  <title>Document</title>
+  <title>Tower Scum - Multiplayer</title>
    <script src="/socket.io/socket.io.js"></script>
    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
    <script type="text/javascript" src="test.js"></script>
@@ -11,7 +11,6 @@
    <script type="text/javascript" src="states/preload.js"></script>
    <script type="text/javascript" src="states/menu.js"></script>
    <script type="text/javascript" src="towerscum.js"></script>
-   <script type="text/javascript" src="states/gameover.js"></script>
    <script type="text/javascript" src="states/youwin.js"></script>
    <script type="text/javascript" src="states/youlose.js"></script>
    <script>
@@ -25,10 +24,8 @@
         game.state.add("Preload",preload);
         game.state.add("Menu",menu);
         game.state.add("TowerScum",towerScum);
-        game.state.add("GameOver",gameOver);
         game.state.add("Win",youWin);
         game.state.add("Lose",youLose);
-
         //Boot the game with first state: Boot
         game.state.start("Boot");
       })();    
