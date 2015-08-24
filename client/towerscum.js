@@ -53,7 +53,8 @@ var textStyle = {
   font: '24pt sans-serif',
   // fill: '#FF8E61',
   fill: '#FFF',
-  wordWrap: true
+  wordWrap: true,
+  wordWrapWidth: 300
 };
 
 //Socket
@@ -77,7 +78,7 @@ towerScum.prototype = {
       player1Text.kill();
     }
     //Create player 1 Text
-    player1Text = this.game.add.text(170, 10, text, textStyle);
+    player1Text = this.game.add.text(150, 10, text, textStyle);
  
     //Enable Physics on Text - Defaults to ARCADE physics
     this.game.physics.arcade.enable(player1Text);
@@ -94,7 +95,7 @@ towerScum.prototype = {
       player2Text.kill();
     }
     //Create player 2 text
-    player2Text = this.game.add.text(850, 10, text, textStyle);
+    player2Text = this.game.add.text(750, 10, text, textStyle);
 
     //Enabe physics
     this.game.physics.arcade.enable(player2Text);
@@ -140,7 +141,7 @@ towerScum.prototype = {
   attack_player1: function(computer, virus){
     virus.animations.play('attack', 15, false, true);
     virus.y = virus.y - 25;
-    health_player1 -= 6.5;
+    health_player1 -= 8;
     virus.events.onAnimationComplete.add(function(){ //trigger another animation
       virus.animations.play('die');
       setTimeout(function(){virus.kill();}, 400);
@@ -152,7 +153,7 @@ towerScum.prototype = {
   attack_player2: function(computer, virus){
     virus.animations.play('attack', 15, false, true);
     virus.y = virus.y - 25;
-    health_player2 -= 6.5;
+    health_player2 -= 8;
     virus.events.onAnimationComplete.add(function(){ //trigger another animation
       virus.animations.play('die');
       setTimeout(function(){virus.kill();}, 400);
