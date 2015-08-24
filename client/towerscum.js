@@ -100,9 +100,18 @@ towerScum.prototype = {
     socket = socket;
     //create music
     music = this.game.add.audio('bg');
-    music.loop = true;
     music.play();
-    setTimeout(function() {music.stop();}, 10000);
+    // music.loop = true;
+    // music2 = this.game.add.audio('bg2');
+    // music2.loop = true;
+    // music2.play();
+    var musicContext = this;
+    setTimeout(function() {
+      music.stop();
+      music2 = musicContext.game.add.audio('bg2');
+      music2.loop = true;
+      music2.play();
+    }, 10000);
 
     //create sparks sound effects
     powerDownSound = this.game.add.audio('powerDown');
