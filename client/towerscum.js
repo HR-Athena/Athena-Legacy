@@ -36,18 +36,19 @@ var explosions = {};
 
 
 //Player objects
-var player1 = {
-  level: 1,
-  counter: 0,
-  updateText: '',
-  text: {}
-};
-var player2 = {
-  level: 1,
-  counter: 0,
-  updateText: '',
-  text: {}
-};
+// var player1 = {
+//   level: 1,
+//   counter: 0,
+//   updateText: '',
+//   text: {}
+// };
+// var player2 = {
+//   level: 1,
+//   counter: 0,
+//   updateText: '',
+//   text: {}
+// };
+var player1Text, player2Text;
 
 var textStyle = {
   font: '24pt sans-serif',
@@ -72,33 +73,35 @@ towerScum.prototype = {
   },
 
   createPlayer1Text: function(text) {
-    if (player1.text) {
-      delete player1.text;
+    if (player1Text) {
+      // delete player1Text;
+      player1Text.kill();
     }
     //Create player 1 Text
-    player1.text = this.game.add.text(100, 10, text, textStyle);
+    player1Text = this.game.add.text(100, 10, text, textStyle);
  
     //Enable Physics on Text - Defaults to ARCADE physics
-    this.game.physics.arcade.enable(player1.text);
+    this.game.physics.arcade.enable(player1Text);
     
     //Set velocity to fall at constant rate
-    player1.text.body.velocity.setTo(0, 50);
+    player1Text.body.velocity.setTo(0, 50);
     
   },
 
   createPlayer2Text: function(text) {
     
-    if (player2.text) {
-      delete player2.text;
+    if (player2Text) {
+      // delete player2Text;
+      player2Text.kill();
     }
     //Create player 2 text
-    player2.text = this.game.add.text(800, 10, text, textStyle);
+    player2Text = this.game.add.text(800, 10, text, textStyle);
 
     //Enabe physics
-    this.game.physics.arcade.enable(player2.text);
+    this.game.physics.arcade.enable(player2Text);
 
     //Set velocity
-    player2.text.body.velocity.setTo(0, 50);
+    player2Text.body.velocity.setTo(0, 50);
   },
 
   destroyText: function(text) {
@@ -109,22 +112,28 @@ towerScum.prototype = {
   emitKeypress: function(char) {
     // console.log('id:',roomId,'player:',player);
     data = {
-      'player1': {
-        level: player1.level,
-        counter: player1.counter,
-        updateText: player1.updateText
-        // text: player1.text.text // I need to not send this
-      },
-      'player2': {
-        level: player2.level,
-        counter: player2.counter,
-        updateText: player2.updateText
-        // text: player2.text.text // I need to not send this
-      },
-      'input': char,
-      'credentials': {id: roomId, player: player}
+      input: char,
+      id: roomId,
+      player: player
     };
-    socket.emit("keypress", JSON.stringify(data));
+    // data = {
+    //   'player1': {
+    //     level: player1.level,
+    //     counter: player1.counter,
+    //     updateText: player1.updateText
+    //     // text: player1.text.text // I need to not send this
+    //   },
+    //   'player2': {
+    //     level: player2.level,
+    //     counter: player2.counter,
+    //     updateText: player2.updateText
+    //     // text: player2.text.text // I need to not send this
+    //   },
+    //   'input': char,
+    //   'credentials': {id: roomId, player: player}
+    // };
+    // socket.emit("keypress", JSON.stringify(data));
+    socket.emit("keypress", data);
     // socket.emit("keypress", data);
   },
 
@@ -234,36 +243,61 @@ towerScum.prototype = {
      // FIX WHEN NO TEXT IS PRESENT -- OR IS DESTROYED
      // console.log('data.player1',data.data.player1);
      // console.log('player1.text',player1.text);
-     player1.text.text = data.data.player1.text;
-     player2.text.text = data.data.player2.text;
+     // player1.text.text = data.data.player1.text;
+     // player2.text.text = data.data.player2.text;
 
-     if (data.data.player1.updateText !== '') {
-      player1.counter++;
-      if (player1.counter % 5 === 0) {
-        player1.level++;
-      }
-      this.createPlayer1Text(data.data.player1.updateText);
-      player1.updateText = '';
-      blueViruses.forEach(function(virus) {
+     // need data to have player 1&2 updateText boolean & text
+     // console.log('received from server:', data);
+     var self = this;
+     var turnViruses = function() {
+      blueViruses.forEach(function(virus) { // this could be abstracted out to its own function
           virus.scale.x *= -1;
           virus.body.velocity.x *= -1.2;
         }, this);
-        this.makeVirus(this);
-     } 
+      self.makeVirus(self);
+     };
 
-     if (data.data.player2.updateText !== '') {
-      player2.counter++;
-      if (player2.counter % 5 === 0) {
-        player2.level++;
-      }
-      this.createPlayer2Text(data.data.player2.updateText);
-      player2.updateText = '';
-      blueViruses.forEach(function(virus) {
-          virus.scale.x *= -1;
-          virus.body.velocity.x *= -1.2;
-        }, this);
-        this.makeVirus(this);
+     if (data.player1.updateText) {
+      this.createPlayer1Text(data.player1.text);
+      turnViruses();
+     } else {
+      player1Text.text = data.player1.text;
      }
+
+     if (data.player2.updateText) {
+      this.createPlayer2Text(data.player2.text);
+      turnViruses();
+     } else {
+      player2Text.text = data.player2.text;
+     }
+
+     // if (data.data.player1.updateText !== '') {
+     //  player1.counter++;
+     //  if (player1.counter % 5 === 0) {
+     //    player1.level++;
+     //  }
+     //  this.createPlayer1Text(data.data.player1.updateText);
+     //  player1.updateText = '';
+     //  blueViruses.forEach(function(virus) {
+     //      virus.scale.x *= -1;
+     //      virus.body.velocity.x *= -1.2;
+     //    }, this);
+     //    this.makeVirus(this);
+     // } 
+
+     // if (data.data.player2.updateText !== '') {
+     //  player2.counter++;
+     //  if (player2.counter % 5 === 0) {
+     //    player2.level++;
+     //  }
+     //  this.createPlayer2Text(data.data.player2.updateText);
+     //  player2.updateText = '';
+     //  blueViruses.forEach(function(virus) {
+     //      virus.scale.x *= -1;
+     //      virus.body.velocity.x *= -1.2;
+     //    }, this);
+     //    this.makeVirus(this);
+     // }
 
      // console.log("P1 Count: ", player1.counter);
      // console.log("P2 Count: ", player2.counter);
@@ -307,8 +341,8 @@ towerScum.prototype = {
 
     // this.game.physics.arcade.collide(player1.text, ground, this.destroyText, null, null);
     // this.game.physics.arcade.collide(player2.text, ground, this.destroyText, null, null);
-    this.game.physics.arcade.collide(player1.text, ground, null, null, null);
-    this.game.physics.arcade.collide(player2.text, ground, null, null, null);
+    this.game.physics.arcade.collide(player1Text, ground, null, null, null);
+    this.game.physics.arcade.collide(player2Text, ground, null, null, null);
 
     // if (player1Text.y > 600) {
     //   this.destroyText(player1Text);

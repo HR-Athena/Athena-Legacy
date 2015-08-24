@@ -65,6 +65,7 @@ io.on("connection", function(socket){
     var name = credentials.name;
     if(!games[gameId]){
       games[gameId] = {};
+      
     }
     if(name){
       if(!games[gameId].player1){
@@ -75,90 +76,83 @@ io.on("connection", function(socket){
         // console.log("player 2 if statement");
         games[gameId].player2 = socket;
         socket.emit("assign player", "player2");
-      } else {
-        if(!games[gameId].viewers){
-          games[gameId].viewers = [];
-        }
-        games[gameId].viewers.push(socket);
       }
+    } else {
+      if(!games[gameId].viewers){
+        games[gameId].viewers = [];
+      }
+      games[gameId].viewers.push(socket);
     }
     // console.log("the games object now is:", games);
     sockets.splice(sockets.indexOf(socket), 1);
   });
 
+  var updateGame = function(char, player, id) {
+    var gameRoom = games[id];
+    // console.log('gameRoom',gameRoom);
+    var returnObj = {
+      player1: {
+        updateText: false,
+        text: gameRoom.properties.player1.text
+      },
+      player2: {
+        updateText: false,
+        text: gameRoom.properties.player2.text
+      }
+    };
+    var playerProperties = gameRoom.properties[player];
+    if (char === playerProperties.text[0]) {
+      playerProperties.text = playerProperties.text.slice(1);
+    }
+    if (playerProperties.text.length === 0) {
+      playerProperties.counter++;
+      returnObj[player].updateText = true;
+      if (playerProperties.counter % 5 === 0 && playerProperties.level < 10) {
+        playerProperties.level++;
+      }
+      var index = Math.floor(Math.random() * textStore[playerProperties.level].length);
+      console.log('index of newText',index,'level:',playerProperties.level,'counter:',playerProperties.counter);
+      var newText = textStore[playerProperties.level][index];
+      console.log('newText is:',newText);
+      playerProperties.text = newText;
+    }
+    returnObj[player].text = playerProperties.text;
+    // console.log('returnObj is:',returnObj);
+    return returnObj;
+  };
+
   //Sync key presses between views
   socket.on("keypress", function(data){
-    data = JSON.parse(data);
+    // data = JSON.parse(data);
     // console.log('data received from client:',data);
-    var player1Level, newText1, player2Level, newText2, updateText1, updateText2;
+    // var player1Level, newText1, player2Level, newText2, updateText1, updateText2;
     // newText1 = 'Starting';
     // newText2 = 'Starting';
-    var gameId = data.credentials.id;
-    var player = data.credentials.player;
-    var player1Socket = games[gameId].player1;
-    var player2Socket = games[gameId].player2;
-    // console.log('games[gameId]:',games[gameId]);
-    var roomSockets = [];
-    if(player1Socket){
-      if (player1Socket.text === undefined) {
-        player1Socket.text = 'Starting';
+    var char = data.input;
+    var gameId = data.id;
+    var player = data.player;
+    if (player) {
+      var player1Socket = games[gameId].player1;
+      var player2Socket = games[gameId].player2;
+      // console.log('games[gameId]:',games[gameId]);
+      var roomSockets = [];
+      if(player1Socket){
+        roomSockets.push(player1Socket);
       }
-      roomSockets.push(player1Socket);
-    }
-    if(player2Socket){
-      if (player2Socket.text === undefined) {
-        player2Socket.text = 'Starting';
+      if(player2Socket){
+        roomSockets.push(player2Socket);
       }
-      roomSockets.push(player2Socket);
-    }
-    if(games[gameId].viewers){
-      roomSockets = roomSockets.concat(games[gameId].viewers);
-    }
+      if(games[gameId].viewers){
+        roomSockets = roomSockets.concat(games[gameId].viewers);
+      }
 
-    if (player === 'player1') {
-      //Check player 1 text
-      if (data.input === player1Socket.text[0]) {
-      // if (data.input === data.player1.text[0]) {
-        player1Socket.text = player1Socket.text.slice(1);
-        data.player1.text = player1Socket.text;
-        if (player1Socket.text.length === 0) {
-          player1Level = data.player1.level;
-          // console.log('level:',player1Level,'textStore:',textStore[player1Level]);
-          if (!newText1) {
-            data.player1.updateText = textStore[player1Level][0];
-            player1Socket.text = data.player1.updateText;
-          } else {
-            data.player1.updateText = newText1;
-            player1Socket.text = data.player1.updateText;
-          }
-        }
-      }
-    // Player 2 Checks if socketId is 1
-    } else if (player === 'player2') {
-      //Check player2 Text
-      if (data.input === player2Socket.text[0]) {
-      // if (data.input === data.player1.text[0]) {
-        player2Socket.text = player2Socket.text.slice(1);
-        data.player2.text = player2Socket.text;
-        if (player2Socket.text.length === 0) {
-          player1Level = data.player2.level;
-          // console.log('level:',player1Level,'textStore:',textStore[player1Level]);
-          if (!newText1) {
-            data.player2.updateText = textStore[player1Level][0];
-            player2Socket.text = data.player2.updateText;
-          } else {
-            data.player2.updateText = newText1;
-            player2Socket.text = data.player2.updateText;
-          }
-        }
-      }
+      var clientData = updateGame(char, player, gameId);
+      
+      roomSockets.forEach(function(socket){
+        // console.log('data to client:',clientData);
+        socket.emit("returning the player data", clientData);
+      });
     }
-    
-    roomSockets.forEach(function(socket){
-      console.log('player1 data to client:',data.player1);
-      console.log('player2 data to client:',data.player2);
-      socket.emit("returning the player data", {data: data});
-    });
     // io.emit("returning the player data", {id: socketId, data: JSON.stringify(data)});
   });
 
@@ -167,6 +161,18 @@ io.on("connection", function(socket){
     // io.emit("Start the game on the client");
     if (data.player) {
       var gameId = data.id;
+      games[gameId].properties = {
+        player1: {
+          text: 'Starting',
+          level: 1,
+          counter: 0
+        },
+        player2: {
+          text: 'Starting',
+          level: 1,
+          counter: 0
+        }
+      };
       var player1Socket = games[gameId].player1;
       var player2Socket = games[gameId].player2;
       var roomSockets = [];
