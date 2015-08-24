@@ -17,8 +17,7 @@ var health_player2 = 128;
 
 //Monsters
 var blueViruses; 
-
-var redViruses = {};
+var redViruses;
 // var blueViruses = {};
 var yellowViruses = {};
 var swordyViruses = {};
@@ -78,7 +77,7 @@ towerScum.prototype = {
       player1Text.kill();
     }
     //Create player 1 Text
-    player1Text = this.game.add.text(100, 10, text, textStyle);
+    player1Text = this.game.add.text(170, 10, text, textStyle);
  
     //Enable Physics on Text - Defaults to ARCADE physics
     this.game.physics.arcade.enable(player1Text);
@@ -95,7 +94,7 @@ towerScum.prototype = {
       player2Text.kill();
     }
     //Create player 2 text
-    player2Text = this.game.add.text(800, 10, text, textStyle);
+    player2Text = this.game.add.text(850, 10, text, textStyle);
 
     //Enabe physics
     this.game.physics.arcade.enable(player2Text);
@@ -141,7 +140,7 @@ towerScum.prototype = {
   attack_player1: function(computer, virus){
     virus.animations.play('attack', 15, false, true);
     virus.y = virus.y - 25;
-    health_player1 -= 10;
+    health_player1 -= 6.5;
     virus.events.onAnimationComplete.add(function(){ //trigger another animation
       virus.animations.play('die');
       setTimeout(function(){virus.kill();}, 400);
@@ -153,7 +152,7 @@ towerScum.prototype = {
   attack_player2: function(computer, virus){
     virus.animations.play('attack', 15, false, true);
     virus.y = virus.y - 25;
-    health_player2 -= 10;
+    health_player2 -= 6.5;
     virus.events.onAnimationComplete.add(function(){ //trigger another animation
       virus.animations.play('die');
       setTimeout(function(){virus.kill();}, 400);
@@ -162,14 +161,14 @@ towerScum.prototype = {
     });
   },
 
-  spawnVirus: function(context) {
-    // console.log('spawnVirus called');
-    context.spawning = true;
-    setTimeout(function() { 
-      context.spawning = false;
-      blueVirus(context, 0, 0);
-    }, 1000);
-  },
+  // spawnVirus: function(context) {
+  //   // console.log('spawnVirus called');
+  //   context.spawning = true;
+  //   setTimeout(function() { 
+  //     context.spawning = false;
+  //     blueVirus(context, 0, 0);
+  //   }, 1000);
+  // },
 
   makeVirus: function(context) {
     blueVirus(context, 0, 0);
@@ -195,6 +194,9 @@ towerScum.prototype = {
     blueViruses = this.game.add.group();
     blueViruses.enableBody = true;
     blueViruses.physicsBodyType = Phaser.Physics.ARCADE;
+    redViruses = this.game.add.group();
+    redViruses.enableBody = true;
+    redViruses.physicsBodyType = Phaser.Physics.ARCADE;
 
     compSprite(this); //Loads right mainframe
     comp2Sprite(this, -936, 0); //Loads left mainframe
@@ -249,24 +251,28 @@ towerScum.prototype = {
      // need data to have player 1&2 updateText boolean & text
      // console.log('received from server:', data);
      var self = this;
-     var turnViruses = function() {
-      blueViruses.forEach(function(virus) { // this could be abstracted out to its own function
-          virus.scale.x *= -1;
-          virus.body.velocity.x *= -1.2;
-        }, this);
-      self.makeVirus(self);
+     var spawnViruses = function(player) { // player parameter is 1 or 2, spawns virus for that player
+      // blueViruses.forEach(function(virus) { 
+      //     virus.scale.x *= -1;
+      //     virus.body.velocity.x *= -1.2;
+      //   }, this);
+      if (player === 1) {
+        blueVirus(self, 150, 400, 1);
+      } else if (player === 2) {
+        blueVirus(self, 1050, 400, 2);
+      }
      };
 
      if (data.player1.updateText) {
       this.createPlayer1Text(data.player1.text);
-      turnViruses();
+      spawnViruses(1);
      } else {
       player1Text.text = data.player1.text;
      }
 
      if (data.player2.updateText) {
       this.createPlayer2Text(data.player2.text);
-      turnViruses();
+      spawnViruses(2);
      } else {
       player2Text.text = data.player2.text;
      }
@@ -318,6 +324,7 @@ towerScum.prototype = {
     // this.game.physics.arcade.collide(blueViruses, platform);
 
     // this.game.physics.arcade.collide(redViruses, ground, null, null, null);
+    // this.game.physics.arcade.collide(redViruses, leftComp, this.attack_player1, null, null);
     // // this.game.physics.arcade.collide(redViruses, collisionLine, this.attack, null, null);
     // this.game.physics.arcade.collide(redViruses, missiles, missileHit, null, null);
     // // this.game.physics.arcade.collide(redViruses, platform);

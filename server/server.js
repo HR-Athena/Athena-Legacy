@@ -116,7 +116,7 @@ io.on("connection", function(socket){
     if (playerProperties.text.length === 0) {
       playerProperties.counter++;
       returnObj[player].updateText = true;
-      if (playerProperties.counter % 5 === 0 && playerProperties.level < 10) {
+      if (playerProperties.counter % 2 === 0 && playerProperties.level < 10) {
         playerProperties.level++;
       }
       var index = Math.floor(Math.random() * textStore[playerProperties.level].length);
