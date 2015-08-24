@@ -40,6 +40,15 @@ connect();
 
 // ========== END OF THE SOCKET AREA ==========
 
+
+// prevent backspace
+$(document).on("keydown", function (e) {
+  if (e.which === 8 && !$(e.target).is("input, textarea")) {
+    e.preventDefault();
+  }
+});
+
+
 // var credentials = {roomId: roomId, name: name};
 
 // $(document).keypress(function(e){
