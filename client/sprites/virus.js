@@ -1,4 +1,4 @@
-var blueVirus = function(that, x, y, direction) { // direction is 1 for right, 2 for left
+var makeVirus = function(that, x, y, direction) { // direction is 1 for right, 2 for left
   x = x || 0;
   y = y || 0;
 
@@ -24,24 +24,24 @@ var blueVirus = function(that, x, y, direction) { // direction is 1 for right, 2
       virus.animations.add('attack', blueAttack, 15, true);
       virus.animations.add('die', blueDie, 15, true);
       virus.animations.play('walk');
-      virus.body.velocity.x = 60;
+      virus.body.velocity.x = 120;
       virus.scale.x = 1;
     } else if (direction === 2) {
       virus.animations.add('walk', redWalk, 15, true);
       virus.animations.add('attack', redAttack, 15, true);
       virus.animations.add('die', redDie, 15, true);
       virus.animations.play('walk');
-      virus.body.velocity.x = -60;
+      virus.body.velocity.x = -120;
       virus.scale.x = -1;
     }
     
   };
   
   if (direction === 1) {
-    var newVirus = blueViruses.create(x, y, 'viruses', "blue/walk/01.png");
+    var newVirus = viruses.create(x, y, 'viruses', "blue/walk/01.png");
     addMovement(newVirus, direction);
   } else if (direction === 2) {
-    var newVirus = blueViruses.create(x, y, 'viruses', "red/walk/01.png");
+    var newVirus = viruses.create(x, y, 'viruses', "red/walk/01.png");
     addMovement(newVirus, direction);
   }
 
