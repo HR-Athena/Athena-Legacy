@@ -4,14 +4,18 @@ var express = require('express');
 var socketio = require('socket.io');
 var favicon = require('serve-favicon');
 var request = require ('request');
-// var path = require('path');
+var path = require('path');
 var textStore = require('./textStore.js');
 
 var app = express();
 var server = http.createServer(app);
 var io = socketio.listen(server);
 
-app.use(express.static(__dirname + "/../client"));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+// app.use(express.static(__dirname + "/../client"));
+app.use("/multiplayer", express.static(__dirname + "/../client"));
 app.use("/original", express.static(__dirname + "/../original-version"));
 
 // app.use(favicon(__dirname + '/../client/favicon.ico'));
@@ -218,8 +222,8 @@ app.get('/games/create', function(req, res){
   // console.log("whole req", req);
 
   var url  = 'https://hooks.slack.com/services/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';
-  var gameUrlForPlayer1 = "https://towerscum-legacy.herokuapp.com/?id=" + req.query.user_id.toLowerCase() + "&player=" + player1;
-  var gameUrlForPlayer2 = "https://towerscum-legacy.herokuapp.com/?id=" + req.query.user_id.toLowerCase() + "&player=" + player2;
+  var gameUrlForPlayer1 = "https://towerscum-legacy.herokuapp.com/multiplayer/?id=" + req.query.user_id.toLowerCase() + "&player=" + player1;
+  var gameUrlForPlayer2 = "https://towerscum-legacy.herokuapp.com/multiplayer/?id=" + req.query.user_id.toLowerCase() + "&player=" + player2;
   var messageForPlayer1 = "You have been challenged to a game of TowerScum: <" + gameUrlForPlayer1 + "| Click Here>";
   var messageForPlayer2 = "You have been challenged to a game of TowerScum: <" + gameUrlForPlayer2 + "| Click Here>";
   var payloadForPlayer1 = { "channel": "@" + player1, 
@@ -250,6 +254,42 @@ app.get('/games/create', function(req, res){
   });
 
   res.sendStatus(200);
+});
+
+
+// LINKS FOR MULTIPLAYER
+var multiplayerLinks = [];
+var generateMultiplayerLink = function(){
+  var symbols = "0123456789abcdefghijklmnopqrstuvwxyz";
+  var id = '', player = '';
+  for (var i = 0; i < 6; i++){
+    var symbolIndex = Math.floor(Math.random() * symbols.length);
+    var symbol = symbols[symbolIndex];
+    id += symbol;
+    symbolIndex = Math.floor(Math.random() * symbols.length);
+    symbol = symbols[symbolIndex];
+    player += symbol;
+  }
+  var url = "/multiplayer/?id=" + id + "&player=" + player;
+  return url;
+};
+var createMultiplayerLinks = function(){
+  multiplayerLinks.push(generateMultiplayerLink());
+  multiplayerLinks.push(generateMultiplayerLink());
+};
+// END OF LINKS FOR MULTIPLAYER
+
+app.get('/', function(req, res){
+  console.log("multiplayer links", multiplayerLinks);
+  if(!multiplayerLinks[0] && !multiplayerLinks[1]){
+    createMultiplayerLinks();
+  }
+  res.render('index.ejs', {multiplayerLinks: multiplayerLinks});
+});
+
+app.get('/multiplayer', function(req, res){
+  multiplayerLinks.shift();
+  res.render('multiplayer.ejs');
 });
 
 server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
