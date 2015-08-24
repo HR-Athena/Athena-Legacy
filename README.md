@@ -1,15 +1,26 @@
-# Tower Scum READ ME
-A variation of a drag/drop protect your 'tower' game.
-Protect your computer from the besieging viruses!
+# Tower Scum 2.0 READ ME
+Now in both single and multiplayer format.
 
+In single-player mode, drag and drop the attacking viruses to protect your computer.
+
+In multiplayer mode, you are pitted against one another to out type your opponent. Complete lines of text to send attacking viruses toward your oppenent and to turn away those they have sent to you! Be the last computer standing to win.
+
+##Slack Integration
+Tower Scum has slack integration to callout your friends directly! By entering '/callout' followed by @user (change user to their username), you can challenge your friends to a round of Tower Scum. A link will be generated that will direct each user to their own battleground.
 
 ##Overview of the files
-The folders are split up by states, sprites, and assets. The main game logic titled "towerscum.js" has the main game logic.
+There are two folders that contain a game mode. 'client' contains the new two-player logic and 'original-version' contains the single-player logic.
+
+For both versions folders are split up by states, sprites, and assets. The main game logic titled "towerscum.js" has the main game logic.
 
 | States | Sprites | Assets |
 | :----- | :------ | :----- |
 | preloads assets | contains virus/sprite animation logic | has the image files | 
 
+
+The 'server' file contains the neccesary framework to support multiplayer gameplay. This includes the logic to update both player views for a consistent experience. Otherwise, the front-end logic and files are not too dissimiliar between the single-player and multi-player modes.
+
+In the multiplayer setup, there are several global variables used. 'roomID', 'player', and 'name' are defined in client/test.js file.
 
 ##States 
 The states folder consists of boot, preload, menu, and game over. There shouldn't be a need to add or delete any files here. 
@@ -55,7 +66,7 @@ Delete the virus image file in the directory of the virus folder. Use [texturepa
 
 ##towerscum.js
 
-All game logic is here. Technically it should be a part of the states folder but this javascript file in particular contains all of the game logic and necessary variables.
+All client-side game logic is here. Technically it should be a part of the states folder but this javascript file in particular contains all of the game logic and necessary variables.
 
 The towerscum.js file 
   * contains the health/score/round functions 
@@ -72,4 +83,5 @@ There are many other functions that is probably missing in this list but this is
 
 ##Other references
 
-[Phaser docs](http://phaser.io/docs)
+[Phaser Docs](http://phaser.io/docs)
+[Socket.io Docs](http://socket.io/docs)
