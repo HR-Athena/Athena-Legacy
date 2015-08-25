@@ -78,12 +78,7 @@ io.on("connection", function(socket){
           // console.log("player 2 if statement");
           games[gameId].player2 = socket;
           socket.emit("assign player", "player2");
-        } else {
-          if(!games[gameId].viewers){
-            games[gameId].viewers = [];
-          }
-          games[gameId].viewers.push(socket);
-        }
+        } 
       } else {
         if(!games[gameId].viewers){
           games[gameId].viewers = [];
