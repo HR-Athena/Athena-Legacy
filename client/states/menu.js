@@ -11,8 +11,10 @@ menu.prototype = {
     this.game.add.tileSprite(0, 0, 800, 600, 'menubg');
     // this.game.add.sprite(0, 0, 'menubg');
     this.game.add.sprite(300,200,"gametitle");
-    loadText = this.game.add.text(600, 300, 'Waiting for opponent...', { font: '32px Impact', fill: '#fff' });
-    loadText.anchor.setTo(0.5,0);
+    // loadText = this.game.add.text(600, 300, 'Waiting for opponent...', { font: '32px Impact', fill: '#fff' });
+    // loadText.anchor.setTo(0.5,0);
+    var playButton = this.game.add.button(600,450,"play",this.playTheGame,this);
+    playButton.anchor.setTo(0.5,0.5);
     this.listenToMessages();
 
 
@@ -34,13 +36,13 @@ menu.prototype = {
       self.game.state.start("TowerScum");
     });
     // this listens for when both players are connected
-    socket.on('Two players connected', function() {
-      console.log('Two player sockets connected');
-      //load play button
-      var playButton = self.game.add.button(600,450,"play",self.playTheGame,self);
-      playButton.anchor.setTo(0.5,0.5);
-      loadText.text = 'Opponent connected - hit play!';
-    });
+    // socket.on('Two players connected', function() {
+    //   console.log('Two player sockets connected');
+    //   //load play button
+    //   var playButton = self.game.add.button(600,450,"play",self.playTheGame,self);
+    //   playButton.anchor.setTo(0.5,0.5);
+    //   loadText.text = 'Opponent connected - hit play!';
+    // });
   }
 };
 

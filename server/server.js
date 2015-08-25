@@ -90,10 +90,10 @@ io.on("connection", function(socket){
         }
         games[gameId].viewers.push(socket);
       }
-      if (games[gameId].player1 && games[gameId].player2) {
-        games[gameId].player1.emit('Two players connected');
-        games[gameId].player2.emit('Two players connected');
-      }
+      // if (games[gameId].player1 && games[gameId].player2) {
+      //   games[gameId].player1.emit('Two players connected');
+      //   games[gameId].player2.emit('Two players connected');
+      // }
       // console.log("the games object now is:", games);
       sockets.splice(sockets.indexOf(socket), 1);
     }

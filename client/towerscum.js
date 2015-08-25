@@ -66,7 +66,7 @@ towerScum.prototype = {
   attack_player1: function(computer, virus){
     virus.animations.play('attack', 15, false, true);
     virus.y = virus.y - 25;
-    health_player1 -= 8;
+    health_player1 -= 6;
     virus.events.onAnimationComplete.add(function(){ //trigger another animation
       virus.animations.play('die');
       setTimeout(function(){virus.kill();}, 400);
@@ -77,7 +77,7 @@ towerScum.prototype = {
   attack_player2: function(computer, virus){
     virus.animations.play('attack', 15, false, true);
     virus.y = virus.y - 25;
-    health_player2 -= 8;
+    health_player2 -= 6;
     virus.events.onAnimationComplete.add(function(){ //trigger another animation
       virus.animations.play('die');
       setTimeout(function(){virus.kill();}, 400);
@@ -163,12 +163,16 @@ towerScum.prototype = {
       if (data.player1.updateText) {
         this.createPlayer1Text(data.player1.text);
         this.spawnVirus(1);
+        var context = this;
+        setTimeout(function() {context.spawnVirus(1);}, 500);
       } else {
         player1Text.text = data.player1.text;
       }
       if (data.player2.updateText) {
         this.createPlayer2Text(data.player2.text);
         this.spawnVirus(2);
+        var context = this;
+        setTimeout(function() {context.spawnVirus(2);}, 500);
       } else {
         player2Text.text = data.player2.text;
       }
