@@ -14,7 +14,7 @@ var io = socketio.listen(server);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// app.use(express.static(__dirname + "/../client"));
+app.use(express.static(__dirname + "/../landing"));
 app.use("/multiplayer", express.static(__dirname + "/../client"));
 app.use("/original", express.static(__dirname + "/../original-version"));
 
@@ -78,12 +78,21 @@ io.on("connection", function(socket){
           // console.log("player 2 if statement");
           games[gameId].player2 = socket;
           socket.emit("assign player", "player2");
+        } else {
+          if(!games[gameId].viewers){
+            games[gameId].viewers = [];
+          }
+          games[gameId].viewers.push(socket);
         }
       } else {
         if(!games[gameId].viewers){
           games[gameId].viewers = [];
         }
         games[gameId].viewers.push(socket);
+      }
+      if (games[gameId].player1 && games[gameId].player2) {
+        games[gameId].player1.emit('Two players connected');
+        games[gameId].player2.emit('Two players connected');
       }
       // console.log("the games object now is:", games);
       sockets.splice(sockets.indexOf(socket), 1);
@@ -183,6 +192,7 @@ io.on("connection", function(socket){
       if(games[gameId].viewers){
         roomSockets = roomSockets.concat(games[gameId].viewers);
       }
+      console.log('roomSockets Array:',roomSockets);
       roomSockets.forEach(function(socket){
         socket.emit("Start the game on the client");
       });
@@ -259,30 +269,32 @@ app.get('/games/create', function(req, res){
 
 // LINKS FOR MULTIPLAYER
 var multiplayerLinks = [];
-var generateMultiplayerLink = function(){
+
+var generateRoomId = function() {
   var symbols = "0123456789abcdefghijklmnopqrstuvwxyz";
-  var id = '', player = '';
+  var id = '';
   for (var i = 0; i < 6; i++){
     var symbolIndex = Math.floor(Math.random() * symbols.length);
     var symbol = symbols[symbolIndex];
     id += symbol;
-    symbolIndex = Math.floor(Math.random() * symbols.length);
-    symbol = symbols[symbolIndex];
-    player += symbol;
   }
-  var url = "/multiplayer/?id=" + id + "&player=" + player;
-  return url;
+  return id;
 };
-var createMultiplayerLinks = function(){
-  multiplayerLinks.push(generateMultiplayerLink());
-  multiplayerLinks.push(generateMultiplayerLink());
+
+var generateMultiplayerLinks = function(){
+  var id = generateRoomId();
+  var url1 = "/multiplayer/?id=" + id + "&player=1";
+  var url2 = "/multiplayer/?id=" + id + "&player=2";
+  multiplayerLinks.push(url1);
+  multiplayerLinks.push(url2);
 };
+
 // END OF LINKS FOR MULTIPLAYER
 
 app.get('/', function(req, res){
   console.log("multiplayer links", multiplayerLinks);
-  if(!multiplayerLinks[0] && !multiplayerLinks[1]){
-    createMultiplayerLinks();
+  if(multiplayerLinks.length === 0){
+    generateMultiplayerLinks();
   }
   res.render('index.ejs', {multiplayerLinks: multiplayerLinks});
 });

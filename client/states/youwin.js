@@ -1,4 +1,4 @@
-var youWin = function(game){}
+var youWin = function(game){};
 
 youWin.prototype = {
   init: function(){
