@@ -1,4 +1,4 @@
-# Tower Scum READ ME
+# Typing Invasion READ ME
 A variation of a drag/drop protect your 'tower' game.
 Protect your computer from the besieging viruses!
 
